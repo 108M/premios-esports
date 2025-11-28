@@ -27,6 +27,12 @@ import {
   Share2, 
   Copy
 } from 'lucide-react';
+import elyoyaFoto from './assets/players/elyoya.png'; // Ajusta el nombre y extensión
+import razorkFoto from './assets/players/razork.png'; // Ajusta el nombre y extensión
+import yikeFoto from './assets/players/yike.png'; // Ajusta el nombre y extensión
+import supaFoto from './assets/players/supa.png'; // Ajusta el nombre y extensión
+
+
 
 // --- TU CONFIGURACIÓN REAL DE FIREBASE ---
 const firebaseConfig = {
@@ -48,7 +54,7 @@ const db = getFirestore(app);
 const appId = "premios-ibericos-web"; 
 
 // --- FECHA OBJETIVO ---
-const TARGET_DATE = new Date('2025-11-28T18:00:00');
+const TARGET_DATE = new Date('2026-01-07T18:00:00');
 
 // --- OBJETO DE ESTILOS (DESACOPLADOS) ---
 const styles = {
@@ -87,8 +93,11 @@ const styles = {
     sectionTitle: "text-center mb-12",
     introBadge: "text-yellow-500 font-bold tracking-widest uppercase text-sm",
     dateMonth: "block text-gray-500 text-2xl font-bold uppercase tracking-widest mb-2",
-    dateDay: "block text-8xl font-black text-white",
+    // MODIFICADO: text-6xl en movil, text-8xl en escritorio
+    dateDay: "block text-6xl md:text-8xl font-black text-white",
     dateHour: "block text-yellow-500 text-3xl font-bold mt-2",
+    // MODIFICADO: Alineación izquierda en móvil, derecha en escritorio
+    dateAlign: "text-left md:text-right",
   },
   components: {
     logoIcon: "bg-gradient-to-tr from-yellow-600 to-yellow-400 p-2 rounded-lg",
@@ -97,16 +106,11 @@ const styles = {
     userEmail: "text-sm font-medium text-gray-300 hidden sm:block",
     logoutIconBtn: "text-gray-400 hover:text-white",
     loginBtn: "text-lg font-bold text-yellow-500 hover:text-yellow-400 flex items-center gap-3 px-5 py-2.5 bg-yellow-500/10 hover:bg-yellow-500/20 rounded-xl border border-yellow-500/30 transition-all shadow-[0_0_15px_rgba(234,179,8,0.1)]",
-    
-    // MODIFICADO: Ajustado padding responsive (px-4 en móvil, px-6 en escritorio)
     navBtnBase: "flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-bold transition-all text-sm sm:text-base",
     navBtnDisabled: "text-gray-600 cursor-not-allowed",
     navBtnActive: "text-white hover:bg-gray-800",
     navBtnNext: "bg-white text-black hover:bg-gray-200 shadow-lg shadow-white/10",
-    
-    // MODIFICADO: Reducido tamaño en móvil (px-4 py-2) y texto más pequeño (text-sm)
     actionBtn: "flex items-center gap-2 px-4 py-2 sm:px-8 sm:py-3 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black rounded-xl font-bold hover:brightness-110 transition-all shadow-[0_0_20px_rgba(234,179,8,0.4)] disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base",
-    
     shareBtn: "flex items-center justify-center gap-2 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition-colors",
     copyBtnBase: "flex items-center justify-center gap-2 py-3 font-bold rounded-xl transition-all border",
     copyBtnSuccess: "bg-green-500 border-green-500 text-white",
@@ -145,8 +149,8 @@ const styles = {
     title: "text-4xl md:text-6xl font-black text-white leading-[0.9] tracking-tighter",
     highlight: "text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-500 to-yellow-700",
     desc: "text-gray-400 text-lg leading-relaxed max-w-xl border-l-4 border-yellow-500/30 pl-6",
-    dateBox: "hidden md:flex flex-col items-end justify-center h-full border-l border-white/10 pl-8 py-4",
-    dateAlign: "text-right",
+    // MODIFICADO: Ajustada la caja de fecha para ser visible y flexible en móvil
+    dateBox: "flex flex-col w-full md:w-auto items-start md:items-end justify-center border-t md:border-t-0 border-white/10 md:border-l pt-6 md:pt-0 md:pl-8 mt-6 md:mt-0",
   },
   countdown: {
     container: "w-full bg-black/50 border-b border-yellow-500/20 py-8 mb-8 backdrop-blur-sm",
@@ -202,10 +206,10 @@ const DATA = {
       icon: <Trophy className="w-6 h-6" />,
       description: 'El jugador más valioso que ha dominado la Grieta del Invocador.',
       candidates: [
-        { id: 'c1', name: 'Elyoya', team: 'MAD Lions', role: 'Jungla', img: '🦁' },
-        { id: 'c2', name: 'Yike', team: 'G2 Esports', role: 'Jungla', img: '⚔️' },
-        { id: 'c3', name: 'Razork', team: 'Fnatic', role: 'Jungla', img: '🔥' },
-        { id: 'c4', name: 'Supa', team: 'Movistar KOI', role: 'ADC', img: '🐟' },
+        { id: 'c1', name: 'Elyoya', team: 'MAD Lions', role: 'Jungla', img: <img src={elyoyaFoto} alt="Elyoya" className="w-full h-full object-cover" /> },
+        { id: 'c2', name: 'Yike', team: 'G2 Esports', role: 'Jungla',img: <img src={yikeFoto} alt="Yike" className="w-full h-full object-cover" /> },
+        { id: 'c3', name: 'Razork', team: 'Fnatic', role: 'Jungla', img: <img src={razorkFoto} alt="Razork" className="w-full h-full object-cover" /> },
+        { id: 'c4', name: 'Supa', team: 'Movistar KOI', role: 'ADC', img: <img src={supaFoto} alt="Supa" className="w-full h-full object-cover" /> },
       ]
     },
     {
@@ -271,15 +275,16 @@ const IntroductionCard = () => (
         </h1>
         
         <p className={styles.intro.desc}>
-          Los Premios Ibéricos regresan este año para unir a jugadores, creadores y equipos en una celebración inolvidable.
+          Los Premios Ibéricos vienen este año para unir a jugadores, creadores y equipos en una celebración inolvidable.
           Tu voz define la historia de nuestra comunidad.
         </p>
       </div>
 
-      <div className="hidden md:flex flex-col items-end justify-center h-full border-l border-white/10 pl-8 py-4">
-        <div className={styles.intro.dateAlign}>
-          <span className={styles.text.dateMonth}>Noviembre</span>
-          <span className={styles.text.dateDay}>28</span>
+      {/* MODIFICADO: Se usa la clase 'dateBox' del styles para que sea visible en móvil */}
+      <div className={styles.intro.dateBox}>
+        <div className={styles.text.dateAlign}>
+          <span className={styles.text.dateMonth}>Enero</span>
+          <span className={styles.text.dateDay}>7</span>
           <span className={styles.text.dateHour}>18:00 CET</span>
         </div>
       </div>
