@@ -91,7 +91,7 @@ const TARGET_DATE = new Date('2026-01-07T18:00:00');
 const FECHA_INICIO = new Date('2025-12-02T10:00:00'); 
 
 // 2. La fecha de apertura será exactamente 7 días (1 semana) después de la fecha de inicio
-const OPENING_DATE = new Date(FECHA_INICIO.getTime() + (8 * 24 * 60 * 60 * 1000));
+const OPENING_DATE = new Date(FECHA_INICIO.getTime() + (0 * 24 * 60 * 60 * 1000));
 
 // --- OBJETO DE ESTILOS ---
 const styles = {
@@ -101,9 +101,9 @@ const styles = {
     navContainer: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between", 
     navLogoGroup: "flex items-center gap-3",
     navUserGroup: "flex items-center gap-4",
-    main: "max-w-7xl mx-auto px-0 py-8 pb-24",
+    main: "max-w-7xl mx-auto px-0 py-8 pb-32",
     footer: "fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-gray-800 p-4 z-40",
-    footerContainer: "max-w-7xl mx-auto flex items-center justify-between",
+    footerContainer: "max-w-7xl mx-auto flex flex-row items-center justify-between gap-4",
     footerDots: "flex gap-2",
     progressBarContainer: "mb-12 max-w-3xl mx-auto px-4",
     progressBarHeader: "flex justify-between text-xs uppercase tracking-widest text-gray-500 mb-2",
@@ -141,12 +141,11 @@ const styles = {
     userEmail: "text-sm font-medium text-gray-300 hidden sm:block",
     logoutIconBtn: "text-gray-400 hover:text-white",
     loginBtn: "text-lg font-bold text-yellow-500 hover:text-yellow-400 flex items-center gap-3 px-5 py-2.5 bg-yellow-500/10 hover:bg-yellow-500/20 rounded-xl border border-yellow-500/30 transition-all shadow-[0_0_15px_rgba(234,179,8,0.1)]",
-    navBtnBase: "flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-bold transition-all text-sm sm:text-base",
+    navBtnBase: "flex items-center justify-center gap-2 px-4 py-3 sm:px-6 rounded-xl font-bold transition-all text-sm sm:text-base flex-1 sm:flex-none",
     navBtnDisabled: "text-gray-600 cursor-not-allowed",
     navBtnActive: "text-white hover:bg-gray-800",
     navBtnNext: "bg-white text-black hover:bg-gray-200 shadow-lg shadow-white/10",
-    actionBtn: "flex items-center gap-2 px-4 py-2 sm:px-8 sm:py-3 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black rounded-xl font-bold hover:brightness-110 transition-all shadow-[0_0_20px_rgba(234,179,8,0.4)] disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base",
-    shareBtn: "flex items-center justify-center gap-2 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition-colors w-full sm:w-auto",
+actionBtn: "flex items-center justify-center gap-2 px-4 py-3 sm:px-8 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black rounded-xl font-bold hover:brightness-110 transition-all shadow-[0_0_20px_rgba(234,179,8,0.4)] disabled:opacity-50 disabled:cursor-not-allowed text-base w-full sm:w-auto",    shareBtn: "flex items-center justify-center gap-2 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition-colors w-full sm:w-auto",
     copyBtnBase: "flex items-center justify-center gap-2 py-3 font-bold rounded-xl transition-all border w-full sm:w-auto",
     copyBtnSuccess: "bg-green-500 border-green-500 text-white",
     copyBtnDefault: "bg-transparent border-gray-600 hover:bg-gray-800 text-gray-300",
@@ -1071,7 +1070,7 @@ export default function App() {
               disabled={isSubmitting}
               className={styles.components.actionBtn}
             >
-              {isSubmitting ? 'Enviando...' : 'Confirmar Votos'} <CheckCircle2 size={20} />
+              {isSubmitting ? 'Enviando...' : ''} <CheckCircle2 size={20} />
             </button>
           )}
         </div>
