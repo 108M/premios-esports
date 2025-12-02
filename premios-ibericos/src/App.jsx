@@ -12,6 +12,10 @@ import {
   setDoc, 
   getDoc
 } from 'firebase/firestore';
+
+// ¡IMPORTANTE! Asegúrate de haber instalado esto: npm install html2canvas
+import html2canvas from 'html2canvas';
+
 import { 
   Trophy, 
   Gamepad2, 
@@ -25,24 +29,51 @@ import {
   LogOut,
   Mail,
   Share2, 
-  Copy
+  Copy,
+  Download,
+  X,
+  Sword,
+  TreeDeciduous,
+  Crosshair,
+  ClipboardList,
+  Users,
+  Video,
+  User,
+  Twitter,
+  Shield,
+  MessageCircle,
+  Frown,
+  Citrus
 } from 'lucide-react';
-import elyoyaFoto from './assets/players/elyoya.png'; // Ajusta el nombre y extensión
-import razorkFoto from './assets/players/razork.png'; // Ajusta el nombre y extensión
-import yikeFoto from './assets/players/yike.png'; // Ajusta el nombre y extensión
-import supaFoto from './assets/players/supa.png'; // Ajusta el nombre y extensión
 
+// --- IMPORTS DE IMÁGENES (TUS RUTAS ORIGINALES) ---
+import elyoyaFoto from './assets/players/elyoya.png'; 
+import razorkFoto from './assets/players/razork.png';
+import skewmondFoto from './assets/players/skewmond.jpg';  
+import yikeFoto from './assets/players/yike.png'; 
+import supaFoto from './assets/players/supa.png'; 
+import flakkedFoto from './assets/players/flakked.jpg';  
 
+import logoImg from './assets/logo2.png'; 
+
+// Roles
+import iconJungle from './assets/roles/jungle.png'; 
+import iconADC from './assets/roles/adc.png'; 
+
+// Definir constantes vacías para roles que no tienen icono aún para evitar errores
+const iconTop = ""; 
+const iconMid = ""; 
+const iconSupp = ""; 
 
 // --- TU CONFIGURACIÓN REAL DE FIREBASE ---
 const firebaseConfig = {
-  apiKey: "AIzaSyAE1umwHioWzOYuYy_aNulPY6m6j5mWdVo",
-  authDomain: "premiosibericos.firebaseapp.com",
-  projectId: "premiosibericos",
-  storageBucket: "premiosibericos.firebasestorage.app",
-  messagingSenderId: "591868154216",
-  appId: "1:591868154216:web:520b40aa5e0cd21093c6dd",
-  measurementId: "G-5KE7VDQKC3"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID
 };
 
 // Inicializamos Firebase
@@ -50,17 +81,23 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ID de la aplicación
 const appId = "premios-ibericos-web"; 
 
-// --- FECHA OBJETIVO ---
+
 const TARGET_DATE = new Date('2026-01-07T18:00:00');
 
-// --- OBJETO DE ESTILOS (DESACOPLADOS) ---
+
+
+const FECHA_INICIO = new Date('2025-12-02T10:00:00'); 
+
+// 2. La fecha de apertura será exactamente 7 días (1 semana) después de la fecha de inicio
+const OPENING_DATE = new Date(FECHA_INICIO.getTime() + (8 * 24 * 60 * 60 * 1000));
+
+// --- OBJETO DE ESTILOS ---
 const styles = {
   layout: {
-    page: "min-h-screen bg-[#050505] text-gray-100 font-sans selection:bg-yellow-500 selection:text-black",
-    navbar: "border-b border-gray-800 bg-black/80 backdrop-blur-md sticky top-0 z-50",
+    page: "min-h-screen bg-[#050505] text-gray-100 font-sans selection:bg-yellow-500 selection:text-black relative",
+    navbar: "border-b border-gray-800 bg-black/60 backdrop-blur-md sticky top-0 z-50",
     navContainer: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between", 
     navLogoGroup: "flex items-center gap-3",
     navUserGroup: "flex items-center gap-4",
@@ -70,13 +107,13 @@ const styles = {
     footerDots: "flex gap-2",
     progressBarContainer: "mb-12 max-w-3xl mx-auto px-4",
     progressBarHeader: "flex justify-between text-xs uppercase tracking-widest text-gray-500 mb-2",
-    progressBarTrack: "h-4 w-full bg-gray-800 rounded-full overflow-hidden shadow-inner border border-gray-700", 
+    progressBarTrack: "h-4 w-full bg-gray-900/80 rounded-full overflow-hidden shadow-inner border border-gray-700", 
     progressBarFill: "h-full bg-gradient-to-r from-yellow-600 to-yellow-400 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(234,179,8,0.5)]", 
     contentWrapper: "animate-fadeIn px-4",
     grid: "grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12 max-w-5xl mx-auto",
-    reviewContainer: "max-w-2xl mx-auto animate-fadeIn px-4",
-    reviewList: "space-y-4 bg-gray-900/50 p-6 rounded-2xl border border-gray-800",
-    reviewItem: "flex items-center justify-between p-4 bg-black rounded-xl border border-gray-800 hover:border-gray-700 transition-colors",
+    reviewContainer: "max-w-4xl mx-auto animate-fadeIn px-4", 
+    reviewList: "grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-900/40 p-6 rounded-2xl border border-gray-800 backdrop-blur-sm",
+    reviewItem: "flex items-center justify-between p-4 bg-black/40 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors",
     reviewItemLeft: "flex items-center gap-4",
     reviewIconBox: "text-yellow-600 bg-yellow-900/20 p-2 rounded-lg",
     reviewItemTitle: "text-xs text-gray-500 uppercase tracking-wider",
@@ -93,15 +130,13 @@ const styles = {
     sectionTitle: "text-center mb-12",
     introBadge: "text-yellow-500 font-bold tracking-widest uppercase text-sm",
     dateMonth: "block text-gray-500 text-2xl font-bold uppercase tracking-widest mb-2",
-    // MODIFICADO: text-6xl en movil, text-8xl en escritorio
     dateDay: "block text-6xl md:text-8xl font-black text-white",
     dateHour: "block text-yellow-500 text-3xl font-bold mt-2",
-    // MODIFICADO: Alineación izquierda en móvil, derecha en escritorio
     dateAlign: "text-left md:text-right",
   },
   components: {
     logoIcon: "bg-gradient-to-tr from-yellow-600 to-yellow-400 p-2 rounded-lg",
-    userBadge: "flex items-center gap-3 bg-gray-900 py-2 px-5 rounded-full border border-gray-700",
+    userBadge: "flex items-center gap-3 bg-gray-900/80 backdrop-blur-md py-2 px-5 rounded-full border border-gray-700",
     userOnlineDot: "w-2 h-2 bg-green-500 rounded-full animate-pulse",
     userEmail: "text-sm font-medium text-gray-300 hidden sm:block",
     logoutIconBtn: "text-gray-400 hover:text-white",
@@ -111,8 +146,8 @@ const styles = {
     navBtnActive: "text-white hover:bg-gray-800",
     navBtnNext: "bg-white text-black hover:bg-gray-200 shadow-lg shadow-white/10",
     actionBtn: "flex items-center gap-2 px-4 py-2 sm:px-8 sm:py-3 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black rounded-xl font-bold hover:brightness-110 transition-all shadow-[0_0_20px_rgba(234,179,8,0.4)] disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base",
-    shareBtn: "flex items-center justify-center gap-2 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition-colors",
-    copyBtnBase: "flex items-center justify-center gap-2 py-3 font-bold rounded-xl transition-all border",
+    shareBtn: "flex items-center justify-center gap-2 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition-colors w-full sm:w-auto",
+    copyBtnBase: "flex items-center justify-center gap-2 py-3 font-bold rounded-xl transition-all border w-full sm:w-auto",
     copyBtnSuccess: "bg-green-500 border-green-500 text-white",
     copyBtnDefault: "bg-transparent border-gray-600 hover:bg-gray-800 text-gray-300",
     logoutBtn: "w-full py-3 text-gray-500 hover:text-white rounded-lg transition-colors flex items-center justify-center gap-2 text-sm",
@@ -122,24 +157,26 @@ const styles = {
     dotInactive: "bg-yellow-800",
     dotPending: "bg-gray-800",
     categoryIconWrapper: "inline-flex items-center justify-center p-3 bg-yellow-500/10 text-yellow-500 rounded-full mb-4 ring-1 ring-yellow-500/50",
+    logoImage: "h-12 w-auto object-contain",
+    logoIntro: "h-20 w-auto object-contain drop-shadow-[0_0_10px_rgba(234,179,8,0.3)]",
   },
   card: {
-    base: "relative group cursor-pointer transition-all duration-300 transform rounded-xl overflow-hidden shadow-lg border border-gray-700",
+    base: "relative group cursor-pointer transition-all duration-300 transform rounded-xl overflow-hidden shadow-lg border border-gray-800 bg-gray-900/40 backdrop-blur-sm",
     selected: "ring-4 ring-yellow-500 scale-105 bg-gray-800",
-    unselected: "hover:scale-105 hover:bg-gray-800 bg-gray-900",
+    unselected: "hover:scale-105 hover:bg-gray-800/80",
     gradientOverlay: "absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-80 z-10",
-    imageContainer: "h-48 w-full bg-gray-800 flex items-center justify-center text-6xl relative z-0",
-    imageIcon: "transform group-hover:scale-110 transition-transform duration-500",
+    imageContainer: "h-48 w-full bg-gray-800 relative z-0 overflow-hidden", 
+    imageIcon: "block w-full h-full transform group-hover:scale-110 transition-transform duration-500",
     content: "absolute bottom-0 left-0 right-0 p-4 z-20",
     footerRow: "flex items-end justify-between",
     teamName: "text-yellow-500 text-xs font-bold uppercase tracking-wider mb-1",
     candidateName: "text-white text-xl font-bold font-sans leading-tight",
-    roleTag: "text-gray-400 text-sm mt-1 flex items-center gap-1",
-    roleDot: "w-2 h-2 rounded-full bg-blue-500",
+    roleTag: "text-gray-400 text-sm mt-1 flex items-center gap-2",
+    roleIcon: "w-4 h-4 object-contain opacity-70", 
     checkIndicator: "bg-yellow-500 text-black p-2 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.6)]",
   },
   intro: {
-    container: "max-w-4xl mx-auto mb-16 relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#1a1a1a] via-[#0d0d0d] to-black border border-white/10 shadow-2xl",
+    container: "max-w-4xl mx-auto mb-16 relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#1a1a1a]/80 via-[#0d0d0d]/80 to-black/80 border border-white/10 shadow-2xl backdrop-blur-md",
     glow1: "absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-yellow-500/10 blur-[120px] rounded-full pointer-events-none",
     glow2: "absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-yellow-600/5 blur-[120px] rounded-full pointer-events-none",
     content: "relative z-10 p-8 md:p-12 flex flex-col md:flex-row items-start gap-8",
@@ -149,11 +186,25 @@ const styles = {
     title: "text-4xl md:text-6xl font-black text-white leading-[0.9] tracking-tighter",
     highlight: "text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-500 to-yellow-700",
     desc: "text-gray-400 text-lg leading-relaxed max-w-xl border-l-4 border-yellow-500/30 pl-6",
-    // MODIFICADO: Ajustada la caja de fecha para ser visible y flexible en móvil
-    dateBox: "flex flex-col w-full md:w-auto items-start md:items-end justify-center border-t md:border-t-0 border-white/10 md:border-l pt-6 md:pt-0 md:pl-8 mt-6 md:mt-0",
+    dateBox: "hidden md:flex flex-col items-end justify-center h-full border-l border-white/10 pl-8 py-4 min-w-[200px]",
+    dateAlign: "text-right",
+    dateMonth: "block text-gray-500 text-sm font-bold uppercase tracking-widest mb-1",
+    dateDay: "block text-5xl font-black text-white",
+    dateHour: "block text-yellow-500 text-xl font-bold mt-2",
+  },
+  preLaunch: {
+    container: "min-h-screen bg-black flex flex-col items-center justify-center relative overflow-hidden p-4",
+    bg: "absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.15),transparent_70%)]",
+    content: "z-10 text-center max-w-5xl w-full",
+    title: "text-xl md:text-2xl text-yellow-500 font-bold uppercase tracking-[0.3em] mb-12 animate-pulse",
+    timerWrapper: "flex flex-wrap justify-center gap-4 md:gap-12 mb-16",
+    unitBox: "flex flex-col items-center",
+    number: "text-6xl md:text-9xl font-black text-white tabular-nums leading-none",
+    label: "text-sm md:text-xl text-gray-500 font-bold uppercase tracking-widest mt-4",
+    message: "text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
   },
   countdown: {
-    container: "w-full bg-black/50 border-b border-yellow-500/20 py-8 mb-8 backdrop-blur-sm",
+    container: "w-full border-b border-yellow-500/20 py-8 mb-8 backdrop-blur-sm",
     wrapper: "max-w-4xl mx-auto px-4 text-center",
     title: "text-white text-lg font-bold uppercase tracking-[0.2em] mb-4 flex items-center justify-center gap-2",
     timerRow: "flex justify-center items-center",
@@ -174,7 +225,7 @@ const styles = {
     iconContainer: "w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-700",
     title: "text-xl font-bold text-white mb-2",
     desc: "text-gray-400 text-sm",
-    form: "space-y-4",
+    form: "space-y-8",
     input: "w-full bg-black border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all",
     errorText: "text-red-500 text-xs mt-2 ml-1",
     submitBtn: "w-full bg-yellow-500 text-black font-bold py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow-400 transition-colors",
@@ -183,69 +234,203 @@ const styles = {
   success: {
     page: "min-h-screen bg-[#0a0a0a] text-white flex flex-col items-center justify-center p-4 relative overflow-hidden",
     background: "absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-900/20 via-black to-black z-0",
-    card: "z-10 text-center max-w-lg w-full bg-gray-900/50 backdrop-blur-md p-8 rounded-2xl border border-yellow-500/30 shadow-[0_0_50px_rgba(234,179,8,0.2)]",
+    card: "z-10 text-center max-w-4xl w-full bg-gray-900/50 backdrop-blur-md p-8 rounded-2xl border border-yellow-500/30 shadow-[0_0_50px_rgba(234,179,8,0.2)] max-h-[90vh] overflow-y-auto custom-scrollbar",
     icon: "w-24 h-24 text-yellow-500 mx-auto mb-6 animate-bounce",
     title: "text-4xl font-bold mb-4 font-sans uppercase tracking-tighter",
     desc: "text-gray-300 mb-8 text-lg",
     highlight: "text-yellow-500 font-bold",
-    listContainer: "space-y-4 mb-8",
+    // MODIFICADO: Grid de 3 columnas para que quede compacto y centrado
+    listContainer: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8",
     listHeader: "text-sm uppercase tracking-widest text-gray-500 border-b border-gray-700 pb-2 mb-4",
-    listItem: "flex items-center justify-between text-left",
-    itemLabel: "text-gray-400 text-sm",
-    itemValue: "text-yellow-500 font-semibold",
-    buttonsGrid: "grid grid-cols-2 gap-4 mb-6"
+    // MODIFICADO: Elementos centrados con flex-col
+    listItem: "flex flex-col items-center justify-center text-center p-4 rounded-xl border border-gray-800 bg-black/40 h-full",
+    itemLabel: "text-gray-500 text-[10px] uppercase tracking-wider mb-1 text-center w-full",
+    itemValue: "text-yellow-500 font-bold text-lg text-center w-full break-words",
+    buttonsGrid: "grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 max-w-lg mx-auto",
+    closeBtn: "absolute top-4 right-4 text-gray-500 hover:text-white cursor-pointer",
+    overlay: "fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-fadeIn",
+  },
+  shareCard: {
+    container: "fixed top-0 left-[-9999px] w-[1080px] bg-[#0a0a0a] p-12 text-white border border-yellow-500/30 rounded-2xl shadow-2xl overflow-hidden z-50", 
+    background: "absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-yellow-900/20 via-[#0a0a0a] to-[#050505] z-0",
+    content: "relative z-10 flex flex-col items-center text-center",
+    header: "flex items-center gap-4 mb-6",
+    logo: "h-20 w-auto object-contain",
+    title: "font-bold text-4xl uppercase tracking-tighter",
+    subtitle: "text-yellow-500 text-lg uppercase tracking-widest mb-10",
+    list: "w-full grid grid-cols-3 gap-4 bg-black/50 p-6 rounded-2xl border border-gray-800/50",
+    item: "flex items-center gap-3 bg-black/60 p-4 rounded-xl border border-gray-800/60",
+    itemLeft: "flex items-center gap-3 w-full",
+    itemIcon: "text-yellow-500 bg-yellow-500/10 p-2 rounded-lg shrink-0",
+    catTitle: "text-[10px] text-gray-400 uppercase tracking-wider text-left truncate block",
+    candName: "font-bold text-base text-left leading-tight",
+    candTeam: "block text-xs text-gray-500 font-normal", 
+    footer: "mt-8 text-gray-500 text-base flex items-center gap-2",
   }
 };
 
-// --- DATOS DE EJEMPLO ---
+// --- DATA COMPLETA (Todas las categorías) ---
 const DATA = {
   categories: [
+    // 1. Jugador Iberico de la LEC
     {
-      id: 'mvp',
-      title: 'MVP de la Temporada',
+      id: 'jugador_lec',
+      title: 'Jugador Ibérico LEC',
       icon: <Trophy className="w-6 h-6" />,
-      description: 'El jugador más valioso que ha dominado la Grieta del Invocador.',
+      description: 'El jugador más destacado en la máxima competición europea.',
       candidates: [
-        { id: 'c1', name: 'Elyoya', team: 'MAD Lions', role: 'Jungla', img: <img src={elyoyaFoto} alt="Elyoya" className="w-full h-full object-cover" /> },
-        { id: 'c2', name: 'Yike', team: 'G2 Esports', role: 'Jungla',img: <img src={yikeFoto} alt="Yike" className="w-full h-full object-cover" /> },
-        { id: 'c3', name: 'Razork', team: 'Fnatic', role: 'Jungla', img: <img src={razorkFoto} alt="Razork" className="w-full h-full object-cover" /> },
-        { id: 'c4', name: 'Supa', team: 'Movistar KOI', role: 'ADC', img: <img src={supaFoto} alt="Supa" className="w-full h-full object-cover" /> },
+        { id: 'p1', name: 'Supa', team: 'Movistar KOI', role: 'ADC', roleIcon: iconADC, img: <img src={supaFoto} alt="Supa" className="w-full h-full object-cover object-top" /> },
+        { id: 'p2', name: 'Myrwn', team: 'MAD Lions KOI', role: 'Top', roleIcon: iconTop, img: '🦁' },
+        { id: 'p3', name: 'Oscarinin', team: 'Fnatic', role: 'Top', roleIcon: iconTop, img: '🤺' },
+        { id: 'p4', name: 'Razork', team: 'Fnatic', role: 'Jungla', roleIcon: iconJungle, img: <img src={razorkFoto} alt="Razork" className="w-full h-full object-cover object-top" /> },
+        { id: 'p5', name: 'Alvaro', team: 'MAD Lions KOI', role: 'Support', roleIcon: iconSupp, img: '🛡️' },
+        { id: 'p6', name: 'Elyoya', team: 'MAD Lions KOI', role: 'Jungla', roleIcon: iconJungle, img: <img src={elyoyaFoto} alt="Elyoya" className="w-full h-full object-cover object-top" /> },
       ]
     },
+    // 2. Staff Iberico de la LEC
     {
-      id: 'rookie',
-      title: 'Rookie del Año',
-      icon: <Zap className="w-6 h-6" />,
-      description: 'La nueva promesa que ha llegado para quedarse.',
+      id: 'staff_lec',
+      title: 'Staff Ibérico LEC',
+      icon: <ClipboardList className="w-6 h-6" />,
+      description: 'Los cerebros detrás de las estrategias en la LEC.',
       candidates: [
-        { id: 'r1', name: 'Myrwn', team: 'MAD Lions', role: 'Top', img: '🏰' },
-        { id: 'r2', name: 'Alvaro', team: 'MAD Lions', role: 'Support', img: '🛡️' },
-        { id: 'r3', name: 'Freskowy', team: 'MAD Lions', role: 'Mid', img: '🧙' },
-        { id: 'r4', name: 'Oscarinin', team: 'Fnatic', role: 'Top', img: '🤺' },
+        { id: 's1', name: 'Melzhet', team: 'MDK', role: 'Head Coach', roleIcon: <ClipboardList className={styles.card.roleIcon} />, img: '🧠' },
+        { id: 's2', name: 'Gaax', team: 'MDK', role: 'Assistant', roleIcon: <ClipboardList className={styles.card.roleIcon} />, img: '📝' },
+        { id: 's3', name: 'Guilhoto', team: 'GiantX', role: 'Head Coach', roleIcon: <ClipboardList className={styles.card.roleIcon} />, img: '🦅' },
+        { id: 's4', name: 'Machuki', team: 'GiantX', role: 'Assistant', roleIcon: <ClipboardList className={styles.card.roleIcon} />, img: '📊' },
+        { id: 's5', name: 'Rodrigo', team: 'G2 Esports', role: 'Staff', roleIcon: <ClipboardList className={styles.card.roleIcon} />, img: '⚔️' },
+        { id: 's6', name: 'Rhuckz', team: 'Fnatic', role: 'Staff', roleIcon: <ClipboardList className={styles.card.roleIcon} />, img: '🧡' },
       ]
     },
+    // 3. Equipo del año
     {
-      id: 'caster',
-      title: 'Mejor Caster',
+      id: 'equipo_ano',
+      title: 'Equipo del Año',
+      icon: <Shield className="w-6 h-6" />,
+      description: 'La organización que ha marcado la diferencia este año.',
+      candidates: [
+        { id: 't1', name: 'Movistar KOI', team: 'KOI', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🟣' },
+        { id: 't2', name: 'Fnatic', team: 'FNC', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🧡' },
+        { id: 't3', name: 'GiantX', team: 'GX', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🟥' },
+        { id: 't4', name: 'Team Heretics', team: 'TH', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🦁' },
+      ]
+    },
+    // 4. Costreaming of the Year
+    {
+      id: 'costreaming',
+      title: 'Costreaming del Año',
+      icon: <Video className="w-6 h-6" />,
+      description: 'La mejor retransmisión alternativa de la competición.',
+      candidates: [
+        { id: 'cs1', name: 'Movistar KOI', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🟣' },
+        { id: 'cs2', name: 'ESPM', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '📺' },
+        { id: 'cs3', name: 'GiantX', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🟥' },
+        { id: 'cs4', name: 'Team Heretics', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🦁' },
+        { id: 'cs5', name: 'Fnatic', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🧡' },
+      ]
+    },
+    // 5. Personalidad
+    {
+      id: 'personalidad',
+      title: 'Personalidad Esports',
+      icon: <User className="w-6 h-6" />,
+      description: 'La figura más influyente y carismática del año.',
+      candidates: [
+        { id: 'per1', name: 'Ibai', team: 'KOI', role: 'Streamer', roleIcon: <User className={styles.card.roleIcon} />, img: '👑' },
+        { id: 'per2', name: 'Toad', team: 'LVP', role: 'Caster', roleIcon: <User className={styles.card.roleIcon} />, img: '🐸' },
+        { id: 'per3', name: 'JordiLMK', team: 'Content', role: 'Creator', roleIcon: <User className={styles.card.roleIcon} />, img: '📹' },
+        { id: 'per4', name: 'Charo Villarejo', team: 'Host', role: 'Talent', roleIcon: <User className={styles.card.roleIcon} />, img: '🎤' },
+        { id: 'per5', name: 'Th3Antonio', team: 'Pro/Stream', role: 'Toplaner', roleIcon: <User className={styles.card.roleIcon} />, img: '💇‍♂️' },
+        { id: 'per6', name: 'Werlyb', team: 'TH', role: 'Creator', roleIcon: <User className={styles.card.roleIcon} />, img: '🐈' },
+      ]
+    },
+    // 6. Mejor Programa
+    {
+      id: 'programa',
+      title: 'Mejor Programa',
       icon: <Mic2 className="w-6 h-6" />,
-      description: 'La voz que nos ha emocionado en cada jugada.',
+      description: 'El contenido más entretenido e informativo.',
       candidates: [
-        { id: 'ca1', name: 'Ibai', team: 'Streamer', role: 'Caster', img: '👑' },
-        { id: 'ca2', name: 'Toad', team: 'LVP', role: 'Play-by-play', img: '🐸' },
-        { id: 'ca3', name: 'Champi', team: 'LVP', role: 'Color', img: '🍄' },
-        { id: 'ca4', name: 'Noa', team: 'LVP', role: 'Analista', img: '🎙️' },
+        { id: 'pr1', name: 'ESPM', team: 'Vodafone', role: 'Show', roleIcon: <Mic2 className={styles.card.roleIcon} />, img: '🎙️' },
+        { id: 'pr2', name: 'AL Lio Podcast', team: 'Podcast', role: 'Show', roleIcon: <Mic2 className={styles.card.roleIcon} />, img: '📻' },
+        { id: 'pr3', name: 'Postpartido Mellado', team: 'Stream', role: 'Show', roleIcon: <Mic2 className={styles.card.roleIcon} />, img: '⚽' },
+        { id: 'pr4', name: 'Tertulia de los 10', team: 'Debate', role: 'Show', roleIcon: <Mic2 className={styles.card.roleIcon} />, img: '🗣️' },
       ]
     },
+    // 7. Talento Streaming
     {
-      id: 'coach',
-      title: 'Mejor Coach',
-      icon: <Gamepad2 className="w-6 h-6" />,
-      description: 'El cerebro detrás de las estrategias ganadoras.',
+      id: 'talento_streaming',
+      title: 'Talento Streaming',
+      icon: <Zap className="w-6 h-6" />,
+      description: 'La voz y el rostro de las retransmisiones oficiales.',
       candidates: [
-        { id: 'co1', name: 'Melzhet', team: 'MAD Lions', role: 'Head Coach', img: '🧠' },
-        { id: 'co2', name: 'Guilhoto', team: 'GiantX', role: 'Head Coach', img: '📝' },
-        { id: 'co3', name: 'Brailer', team: 'Heretics', role: 'Coach', img: '📊' },
-        { id: 'co4', name: 'Falco', team: 'Movistar KOI', role: 'Coach', img: '🦅' },
+        { id: 'ts1', name: 'BebeCaster', team: 'LVP', role: 'Caster', roleIcon: <Zap className={styles.card.roleIcon} />, img: '👶' },
+        { id: 'ts2', name: 'Noa', team: 'LVP', role: 'Analyst', roleIcon: <Zap className={styles.card.roleIcon} />, img: '🧠' },
+        { id: 'ts3', name: 'Fernando Cardenete', team: 'LVP', role: 'Caster', roleIcon: <Zap className={styles.card.roleIcon} />, img: '📝' },
+        { id: 'ts4', name: 'Wolk', team: 'LVP', role: 'Caster', roleIcon: <Zap className={styles.card.roleIcon} />, img: '🐺' },
+        { id: 'ts5', name: 'Champi14', team: 'LVP', role: 'Caster', roleIcon: <Zap className={styles.card.roleIcon} />, img: '🍄' },
+      ]
+    },
+    // 8. Cuenta Twitter
+    {
+      id: 'twitter_cuenta',
+      title: 'Twitter Oficial',
+      icon: <Twitter className="w-6 h-6" />,
+      description: 'La mejor gestión de redes sociales de equipo u organización.',
+      candidates: [
+        { id: 'tw1', name: 'Movistar KOI', team: 'KOI', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🟣' },
+        { id: 'tw2', name: 'GiantX', team: 'GX', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🟥' },
+        { id: 'tw3', name: 'Team Heretics', team: 'TH', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🦁' },
+        { id: 'tw4', name: 'LVP', team: 'LVP', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🏆' },
+        { id: 'tw5', name: 'Sheep Esports ES', team: 'News', role: 'Media', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🐑' },
+      ]
+    },
+    // 9. Twittero
+    {
+      id: 'twittero',
+      title: 'Twittero del Año',
+      icon: <User className="w-6 h-6" />,
+      description: 'El usuario que ha reinado en la comunidad de Twitter España.',
+      candidates: [
+        { id: 'twt1', name: 'Hylisangista', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '🐦' },
+        { id: 'twt2', name: 'Razorkismo', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '🗡️' },
+        { id: 'twt3', name: 'Jakose', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '🎭' },
+        { id: 'twt4', name: 'Erixger', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '📱' },
+      ]
+    },
+    // 10. Fans de equipo
+    {
+      id: 'fans',
+      title: 'Fan del Año',
+      icon: <Users className="w-6 h-6" />,
+      description: 'El seguidor más apasionado y leal.',
+      candidates: [
+        { id: 'f1', name: 'Vicotrew', team: 'Fan', role: 'Superfan', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
+        { id: 'f2', name: 'IndarGuasones', team: 'Fan', role: 'Superfan', roleIcon: <Users className={styles.card.roleIcon} />, img: '🃏' },
+        { id: 'f3', name: 'Dropick', team: 'Fan', role: 'Superfan', roleIcon: <Users className={styles.card.roleIcon} />, img: '💧' },
+      ]
+    },
+    // 11. Tweet del Año
+    {
+      id: 'tweet_year',
+      title: 'Tweet del Año',
+      icon: <MessageCircle className="w-6 h-6" />,
+      description: 'El mensaje que rompió internet este año.',
+      candidates: [
+        { id: 'msg1', name: 'Twittlonger Cabra', team: 'Cabra', role: 'Tweet', roleIcon: <MessageCircle className="w-4 h-4" />, img: '📜' },
+        { id: 'msg2', name: 'Tweet de Ibai', team: 'Ibai', role: 'Tweet', roleIcon: <MessageCircle className="w-4 h-4" />, img: '💬' },
+      ]
+    },
+    // 12. Premios Aparte (Agrupados o última categoría)
+    {
+      id: 'premios_extra',
+      title: 'Premios Especiales',
+      icon: <Trophy className="w-6 h-6" />,
+      description: 'Reconocimientos únicos de la comunidad.',
+      candidates: [
+        { id: 'pe1', name: 'Pili y Anna', team: 'Discord Mujeres', role: 'Comunidad', roleIcon: <Users className="w-4 h-4" />, img: '👯‍♀️' },
+        { id: 'pe2', name: 'Peor Jugada', team: 'Fail', role: 'Fail', roleIcon: <Frown className="w-4 h-4" />, img: '🤡' },
+        { id: 'pe3', name: 'Premio Limón', team: 'Acidez', role: 'Limón', roleIcon: <Citrus className="w-4 h-4" />, img: '🍋' },
       ]
     }
   ]
@@ -261,9 +446,7 @@ const IntroductionCard = () => (
     <div className={styles.intro.content}>
       <div className={styles.intro.leftColumn}>
         <div className={styles.intro.badgeRow}>
-          <div className={styles.intro.badgeIcon}>
-             <Trophy className="text-black w-6 h-6" />
-          </div>
+          <img src={logoImg} alt="Logo" className={styles.components.logoIntro} /> 
           <span className={styles.text.introBadge}>Premios Ibéricos</span>
         </div>
 
@@ -280,7 +463,6 @@ const IntroductionCard = () => (
         </p>
       </div>
 
-      {/* MODIFICADO: Se usa la clase 'dateBox' del styles para que sea visible en móvil */}
       <div className={styles.intro.dateBox}>
         <div className={styles.text.dateAlign}>
           <span className={styles.text.dateMonth}>Enero</span>
@@ -320,7 +502,6 @@ const CountdownTimer = () => {
       <div className={styles.countdown.number}>
         {String(value).padStart(2, '0')}
       </div>
-      <span className={styles.countdown.label}>{label}</span>
     </div>
   );
 
@@ -344,11 +525,73 @@ const CountdownTimer = () => {
   );
 };
 
+// --- NUEVO: Pantalla de Espera (Pre-Launch) ---
+const PreLaunchScreen = ({ onOpen }) => {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const difference = +OPENING_DATE - +new Date();
+      
+      if (difference <= 0) {
+        clearInterval(timer);
+        onOpen(); // Desbloquear la web automáticamente
+      } else {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60),
+        });
+      }
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [onOpen]);
+
+  const TimeUnit = ({ value, label }) => (
+    <div className={styles.preLaunch.unitBox}>
+      <div className={styles.preLaunch.number}>
+        {String(value).padStart(2, '0')}
+      </div>
+      <span className={styles.preLaunch.label}>{label}</span>
+    </div>
+  );
+
+  return (
+    <div className={styles.preLaunch.container}>
+      <div className={styles.preLaunch.bg} />
+      
+      <div className={styles.preLaunch.content}>
+        <div className="flex justify-center mb-8">
+          <img src={logoImg} alt="Logo" className="h-32 w-auto object-contain" />
+        </div>
+
+        <h2 className={styles.preLaunch.title}>
+          En {timeLeft.days} días se abrirán las votaciones
+        </h2>
+
+        <div className={styles.preLaunch.timerWrapper}>
+          <TimeUnit value={timeLeft.days} label="Días" />
+          <TimeUnit value={timeLeft.hours} label="Horas" />
+          <TimeUnit value={timeLeft.minutes} label="Minutos" />
+          <TimeUnit value={timeLeft.seconds} label="Segundos" />
+        </div>
+
+        <p className={styles.preLaunch.message}>
+          Prepárate para elegir a los mejores de la comunidad. <br />
+          La gala de los Premios Ibéricos 2025 está a punto de comenzar.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+
 const CandidateCard = ({ candidate, isSelected, onSelect }) => (
   <div 
     onClick={() => onSelect(candidate.id)}
     className={`
-      ${styles.card.base}
+      ${styles.card.base} group
       ${isSelected ? styles.card.selected : styles.card.unselected}
     `}
   >
@@ -370,7 +613,8 @@ const CandidateCard = ({ candidate, isSelected, onSelect }) => (
             {candidate.name}
           </h3>
           <p className={styles.card.roleTag}>
-            <span className={styles.card.roleDot}></span>
+            {/* Solo renderiza la imagen si existe una ruta válida */}
+            {candidate.roleIcon && <span className="w-5 h-5">{candidate.roleIcon}</span>}
             {candidate.role}
           </p>
         </div>
@@ -384,7 +628,46 @@ const CandidateCard = ({ candidate, isSelected, onSelect }) => (
   </div>
 );
 
-// Componente Principal
+const VoteSummaryCardHidden = ({ votes, data }) => {
+  return (
+    <div id="vote-summary-card-hidden" className={styles.shareCard.container}>
+      <div className={styles.shareCard.background}></div>
+      <div className={styles.shareCard.content}>
+        <div className={styles.shareCard.header}>
+            <img src={logoImg} alt="Logo" className={styles.shareCard.logo} />
+            <h1 className={styles.shareCard.title}>Premios <span className="text-yellow-500">Ibéricos</span></h1>
+        </div>
+        <p className={styles.shareCard.subtitle}>Mis Votos Oficiales 2025</p>
+        
+        <div className={styles.shareCard.list}>
+          {data.categories.map(cat => {
+            const selected = cat.candidates.find(c => c.id === votes[cat.id]);
+            if (!selected) return null;
+            return (
+              <div key={cat.id} className={styles.shareCard.item}>
+                <div className={styles.shareCard.itemLeft}>
+                  <div className={styles.shareCard.itemIcon}>{cat.icon}</div>
+                  <div>
+                      <div className={styles.shareCard.catTitle}>{cat.title}</div>
+                      <div className={styles.shareCard.candName}>
+                           {selected.name}
+                           <span className={styles.shareCard.candTeam}>({selected.team})</span>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className={styles.shareCard.footer}>
+          <CheckCircle2 size={16} className="text-yellow-500"/> Voto certificado el {new Date().toLocaleDateString()}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- COMPONENTE PRINCIPAL ---
 export default function App() {
   const [user, setUser] = useState(null);
   const [votes, setVotes] = useState({});
@@ -394,28 +677,45 @@ export default function App() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [isVotingOpen, setIsVotingOpen] = useState(false);
+  const [generatingImage, setGeneratingImage] = useState(false);
+  const [generatedImage, setGeneratedImage] = useState(null);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showSuccessView, setShowSuccessView] = useState(false); 
 
   const [emailInput, setEmailInput] = useState('');
   const [voterEmail, setVoterEmail] = useState('');
   const [emailError, setEmailError] = useState('');
 
-  // Referencia para scroll automático
   const titleRef = useRef(null);
+  
+  const backgroundStyle = {
+    backgroundColor: '#050505',
+    backgroundImage: `
+      radial-gradient(circle at 50% 10%, rgba(234, 179, 8, 0.15), transparent 40%),
+      radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px)
+    `,
+    backgroundSize: '100% 100%, 32px 32px'
+  };
 
   useEffect(() => {
-    // Cuando cambiamos de paso (currentStep), ejecutamos el scroll
+    if (new Date() >= OPENING_DATE) {
+      setIsVotingOpen(true);
+    }
+  }, []);
+
+  useEffect(() => {
     if (titleRef.current) {
       const yOffset = -120;
       const element = titleRef.current;
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-
       window.scrollTo({ top: y, behavior: 'smooth' });
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [currentStep]);
 
-  // --- LÓGICA DE AUTENTICACIÓN Y CARGA ---
+  // --- CORRECCIÓN IMPORTANTE: NO MOSTRAR SUCCESS AL CARGAR ---
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -428,6 +728,7 @@ export default function App() {
             if (data.ballot) {
               setVotes(data.ballot);
               setHasSubmitted(true);
+              // setShowSuccessView(true); // <--- ELIMINADO PARA QUE NO SALTE AL RECARGAR
               if (data.userEmail) {
                 setVoterEmail(data.userEmail);
               }
@@ -449,7 +750,6 @@ export default function App() {
       setEmailError('Por favor, introduce un correo válido.');
       return;
     }
-
     try {
       setEmailError('');
       await signInAnonymously(auth); 
@@ -465,9 +765,13 @@ export default function App() {
     await signOut(auth);
     setVotes({});
     setHasSubmitted(false);
+    setShowSuccessView(false); 
     setVoterEmail('');
     setEmailInput('');
     setCurrentStep(0);
+    setGeneratedImage(null);
+    setShowShareModal(false);
+    setGeneratingImage(false);
   };
 
   const handleVote = (candidateId) => {
@@ -498,7 +802,6 @@ export default function App() {
       alert("Por favor, vota en todas las categorías antes de enviar.");
       return;
     }
-
     setIsSubmitting(true);
     try {
       await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'votes', 'selection'), {
@@ -509,6 +812,7 @@ export default function App() {
         appId: appId
       });
       setHasSubmitted(true);
+      setShowSuccessView(true); // Aquí sí queremos que salte al terminar de votar
     } catch (error) {
       console.error("Error guardando votos:", error);
       alert("Hubo un error al enviar tus votos. Inténtalo de nuevo.");
@@ -517,26 +821,8 @@ export default function App() {
     }
   };
 
-  const generateShareText = () => {
-    let text = "🗳️ Mis votos para los #PremiosIbéricos:\n\n";
-    DATA.categories.forEach(cat => {
-      const selectedId = votes[cat.id];
-      const candidate = cat.candidates.find(c => c.id === selectedId);
-      if (candidate) {
-        text += `${cat.title}: ${candidate.name} ${candidate.img}\n`;
-      }
-    });
-    return text;
-  };
-
-  const handleShareTwitter = () => {
-    const text = generateShareText();
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
-  };
-
   const handleCopyClipboard = async () => {
-    const text = generateShareText();
+    const text = "🗳️ Mis votos para los #PremiosIbéricos...";
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
@@ -546,7 +832,63 @@ export default function App() {
     }
   };
 
-  // --- RENDERIZADO ---
+  const handleGenerateImage = async () => {
+        if (typeof html2canvas === 'undefined') {
+            alert("Para generar la imagen, necesitas instalar html2canvas en tu proyecto local: npm install html2canvas");
+            return;
+        }
+        setGeneratingImage(true);
+        try {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            const element = document.getElementById('vote-summary-card-hidden');
+            if (!element) {
+                setGeneratingImage(false);
+                return;
+            }
+            const canvas = await html2canvas(element, {
+                backgroundColor: '#0a0a0a', 
+                scale: 2, 
+                useCORS: true, 
+                allowTaint: true, 
+                logging: true,
+                x: 0,
+                y: 0,
+                width: 1080, // WIDTH AJUSTADO AL NUEVO TAMAÑO DE TARJETA
+                height: element.offsetHeight
+            });
+            const image = canvas.toDataURL("image/png");
+            setGeneratedImage(image);
+            setShowSuccessView(false); 
+            setShowShareModal(true); 
+        } catch (error) {
+            console.error("Error generando imagen:", error);
+            alert("Error al generar la imagen: " + error.message);
+        } finally {
+            setGeneratingImage(false);
+        }
+    };
+
+  const downloadImage = () => {
+      if (!generatedImage) return;
+      const link = document.createElement('a');
+      link.href = generatedImage;
+      link.download = 'MisVotosPremiosIbericos.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  };
+
+  const openTwitterIntent = () => {
+        const text = "¡Estos son mis votos para los #PremiosIbéricos! 🗳️\n\n(Adjunta tu imagen copiada aquí 👇)";
+        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+        setShowShareModal(false); 
+  }
+
+  const handleShareTwitter = () => {
+    openTwitterIntent();
+  };
+
   if (loading) {
     return (
       <div className={styles.loading.container}>
@@ -555,71 +897,24 @@ export default function App() {
     );
   }
 
-  // PANTALLA DE ÉXITO (YA VOTADO)
-  if (hasSubmitted) {
-    return (
-      <div className={styles.success.page}>
-        <div className={styles.success.background}></div>
-        
-        <div className={styles.success.card}>
-          <Trophy className={styles.success.icon} />
-          <h1 className={styles.success.title}>
-            ¡Votos Enviados!
-          </h1>
-          <p className={styles.success.desc}>
-            Gracias por participar en los <span className={styles.success.highlight}>Premios Ibéricos</span>.
-            Tus elecciones han sido registradas correctamente.
-          </p>
-          
-          <div className={styles.success.listContainer}>
-            <h3 className={styles.success.listHeader}>Tu Selección</h3>
-            {DATA.categories.map(cat => {
-              const selectedCandidate = cat.candidates.find(c => c.id === votes[cat.id]);
-              return (
-                <div key={cat.id} className={styles.success.listItem}>
-                  <span className={styles.success.itemLabel}>{cat.title}</span>
-                  <span className={styles.success.itemValue}>{selectedCandidate?.name || '-'}</span>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className={styles.success.buttonsGrid}>
-            <button onClick={handleShareTwitter} className={styles.components.shareBtn}>
-              <Share2 size={18} /> Twittear
-            </button>
-            <button 
-              onClick={handleCopyClipboard} 
-              className={`${styles.components.copyBtnBase} ${copied ? styles.components.copyBtnSuccess : styles.components.copyBtnDefault}`}
-            >
-              {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
-              {copied ? '¡Copiado!' : 'Copiar'}
-            </button>
-          </div>
-
-          <button onClick={handleLogout} className={styles.components.logoutBtn}>
-            <LogOut size={16} /> Cerrar Sesión
-          </button>
-        </div>
-      </div>
-    );
+  // --- PANTALLA DE ESPERA ---
+  if (!isVotingOpen) {
+    return <PreLaunchScreen onOpen={() => setIsVotingOpen(true)} />;
   }
 
+  // --- APP NORMAL ---
   const currentCategoryData = DATA.categories[currentStep];
   const isReviewStep = currentStep === DATA.categories.length;
 
   return (
-    <div className={styles.layout.page}>
-      {/* --- NAVBAR --- */}
+    <div className={styles.layout.page} style={backgroundStyle}>
+      {/* NAVBAR */}
       <nav className={styles.layout.navbar}>
         <div className={styles.layout.navContainer}>
           <div className={styles.layout.navLogoGroup}>
-            <div className={styles.components.logoIcon}>
-              <Trophy className="text-black w-5 h-5" />
-            </div>
+            <img src={logoImg} alt="Logo" className={styles.components.logoImage} /> 
             <span className={styles.text.logo}>Premios <span className={styles.text.logoAccent}>Ibéricos</span></span>
           </div>
-          
           <div className={styles.layout.navUserGroup}>
             {voterEmail ? (
               <div className={styles.components.userBadge}>
@@ -638,9 +933,19 @@ export default function App() {
         </div>
       </nav>
 
-      {/* --- CONTENIDO PRINCIPAL --- */}
+      {/* CONTENIDO */}
       <main className={styles.layout.main}>
-        
+        {hasSubmitted && !showSuccessView && (
+             <div className="mb-8 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl flex items-center justify-between max-w-5xl mx-auto">
+                 <span className="text-yellow-500 font-bold flex items-center gap-2">
+                    <CheckCircle2 size={20} /> Ya has votado
+                 </span>
+                 <button onClick={() => setShowSuccessView(true)} className="text-sm underline hover:text-white text-gray-400">
+                    Ver resumen
+                 </button>
+             </div>
+        )}
+
         {!hasSubmitted && !isReviewStep && currentStep === 0 && (
           <div className={styles.layout.contentWrapper}>
             <IntroductionCard />
@@ -651,7 +956,6 @@ export default function App() {
           <CountdownTimer />
         )}
 
-        {/* Barra de Progreso */}
         <div className={styles.layout.progressBarContainer}>
           <div className={styles.layout.progressBarHeader}>
             <span>Progreso</span>
@@ -693,6 +997,7 @@ export default function App() {
               <p className={styles.text.subheading}>Revisa tus elecciones antes de enviar.</p>
             </div>
 
+            {/* MODIFICADO: GRID DE 2 COLUMNAS */}
             <div className={styles.layout.reviewList}>
               {DATA.categories.map((cat) => {
                 const selected = cat.candidates.find(c => c.id === votes[cat.id]);
@@ -717,7 +1022,7 @@ export default function App() {
                         Editar
                       </button>
                     ) : (
-                        <button 
+                       <button 
                         onClick={() => setCurrentStep(DATA.categories.findIndex(c => c.id === cat.id))}
                         className={styles.layout.reviewVoteBtn}
                       >
@@ -732,7 +1037,7 @@ export default function App() {
         )}
       </main>
 
-      {/* --- FOOTER DE NAVEGACIÓN --- */}
+      {/* FOOTER */}
       <div className={styles.layout.footer}>
         <div className={styles.layout.footerContainer}>
           <button 
@@ -772,7 +1077,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* --- MODAL LOGIN --- */}
+      {/* LOGIN MODAL */}
       {showLoginModal && (
         <div className={styles.modal.overlay}>
           <div className={styles.modal.container}>
@@ -790,7 +1095,7 @@ export default function App() {
               </p>
             </div>
 
-            <form onSubmit={handleLogin} className="modal-form">
+            <form onSubmit={handleLogin} className={styles.modal.form}>
               <div>
                 <input 
                   type="email" 
@@ -803,16 +1108,117 @@ export default function App() {
                 {emailError && <p className="modal-error-text">{emailError}</p>}
               </div>
 
-              <button type="submit" className="modal-submitBtn">
+              {/* CORREGIDO: Usando el objeto de estilos */}
+              <button type="submit" className={styles.modal.submitBtn}>
                 Continuar <ChevronRight size={18} />
               </button>
             </form>
 
-            <p className="modal-footerText">
+            <p className={styles.modal.footerText}>
               * Tu correo se usará solo para verificar la autenticidad del voto.
             </p>
           </div>
         </div>
+      )}
+
+      {/* OVERLAY DE ÉXITO */}
+      {hasSubmitted && showSuccessView && (
+        <div className={styles.success.overlay}>
+            <div className={styles.success.card}>
+            <button 
+                onClick={() => setShowSuccessView(false)} 
+                className={styles.success.closeBtn}
+                title="Cerrar y ver candidatos"
+            >
+                <X size={24} />
+            </button>
+
+            <Trophy className={styles.success.icon} />
+            <h1 className={styles.success.title}>
+                ¡Votos Enviados!
+            </h1>
+            <p className={styles.success.desc}>
+                Gracias por participar en los <span className={styles.success.highlight}>Premios Ibéricos</span>.
+                Tus elecciones han sido registradas correctamente.
+            </p>
+            
+            {/* RESUMEN EN EL MODAL DE ÉXITO TAMBIÉN EN GRID (OPCIONAL) */}
+            <div className={`${styles.success.listContainer} grid grid-cols-1 sm:grid-cols-2 gap-3`}>
+                {DATA.categories.map(cat => {
+                const selectedCandidate = cat.candidates.find(c => c.id === votes[cat.id]);
+                return (
+                    <div key={cat.id} className={`${styles.success.listItem} border border-gray-800/50 bg-gray-900/30 p-3 rounded-lg`}>
+                    <div className="flex flex-col">
+                        <span className="text-[10px] uppercase text-gray-500 tracking-wider">{cat.title}</span>
+                        <span className={styles.success.itemValue}>{selectedCandidate?.name || '-'}</span>
+                    </div>
+                    </div>
+                );
+                })}
+            </div>
+
+            <div className={styles.success.buttonsGrid}>
+                <button 
+                    onClick={handleGenerateImage} 
+                    disabled={generatingImage}
+                    className={styles.components.shareBtn}
+                >
+                <Share2 size={18} /> {generatingImage ? 'Generando...' : 'Compartir Imagen'}
+                </button>
+                <button 
+                onClick={handleCopyClipboard} 
+                className={`${styles.components.copyBtnBase} ${copied ? styles.components.copyBtnSuccess : styles.components.copyBtnDefault}`}
+                >
+                {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
+                {copied ? '¡Copiado!' : 'Copiar'}
+                </button>
+            </div>
+
+            <button onClick={handleLogout} className={styles.components.logoutBtn}>
+                <LogOut size={16} /> Cerrar Sesión
+            </button>
+            </div>
+        </div>
+      )}
+
+      {/* MODAL SHARE */}
+      {showShareModal && generatedImage && (
+        <div className={styles.modal.overlay} style={{zIndex: 70}}>
+          <div className={`${styles.modal.container} max-w-md`}>
+             <button onClick={() => setShowShareModal(false)} className={styles.modal.closeBtn}>
+              <X size={20} />
+            </button>
+
+             <div className="text-center mb-4">
+                <h3 className={styles.modal.title}>¡Imagen Lista!</h3>
+                <p className="text-sm text-gray-400">Copia la imagen y adjúntala en Twitter.</p>
+            </div>
+
+            <div className="mb-6 rounded-xl overflow-hidden border border-gray-800 shadow-lg">
+                 <img src={generatedImage} alt="Resumen de Votos" className="w-full h-auto" />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button 
+                    onClick={downloadImage}
+                    className={`${styles.components.navBtnBase} bg-gray-800 hover:bg-gray-700 text-white w-full justify-center`}
+                >
+                     <Download size={18} /> Descargar
+                </button>
+                <button 
+                    onClick={openTwitterIntent}
+                    className={`${styles.components.shareBtn} w-full justify-center`}
+                >
+                     <Share2 size={18} /> Abrir Twitter
+                </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* CARD OCULTA PARA GENERACIÓN */}
+      {hasSubmitted && (
+          <VoteSummaryCardHidden votes={votes} data={DATA} />
       )}
     </div>
   );
