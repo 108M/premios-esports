@@ -12,7 +12,7 @@ import {
   setDoc, 
   getDoc
 } from 'firebase/firestore';
-
+import { getAnalytics } from "firebase/analytics";
 // ¡IMPORTANTE! Asegúrate de haber instalado esto: npm install html2canvas
 import html2canvas from 'html2canvas';
 
@@ -45,26 +45,61 @@ import {
   Frown,
   Citrus
 } from 'lucide-react';
-
-// --- IMPORTS DE IMÁGENES (TUS RUTAS ORIGINALES) ---
-import elyoyaFoto from './assets/players/elyoya.png'; 
-import razorkFoto from './assets/players/razork.png';
-import skewmondFoto from './assets/players/skewmond.jpg';  
-import yikeFoto from './assets/players/yike.png'; 
-import supaFoto from './assets/players/supa.png'; 
-import flakkedFoto from './assets/players/flakked.jpg';  
-
+//LOGOS
 import logoImg from './assets/logo2.png'; 
+
+// --- IMPORTS DE IMÁGENES ---
+
+// Players
+import elyoyaFoto from './assets/players/elyoya.jpg'; 
+import razorkFoto from './assets/players/razork.png';
+import supaFoto from './assets/players/supa.jpg';
+import alvaroFoto from './assets/players/alvaro.jpg';
+import myrwinFoto from './assets/players/myrwin.jpg';
+import oscarininFoto from './assets/players/oscarinin.jpg';
+
+// Staff
+import melzhetFoto from './assets/staff/melzhet.jpeg';
+import gaaxFoto from './assets/staff/gaax.jpg';
+import guilhotoFoto from './assets/staff/guilhoto.jpg';
+import machukiFoto from './assets/staff/machuki.jpeg';
+import rodrigoFoto from './assets/staff/rodrigo.jpg';
+import rhuckzFoto from './assets/staff/rhuckz.jpeg';
+
+//Personalidad
+import ibaiFoto from './assets/personalidad/ibai.jpeg';
+import toadFoto from './assets/personalidad/toad.png';
+import jordilmkFoto from './assets/personalidad/jordilmk.jpg';
+import charoFoto from './assets/personalidad/charo.png';
+import th3antonioFoto from './assets/personalidad/th3antonio.png';
+import werlybFoto from './assets/personalidad/werlyb.jpeg';
+
+
+//Programa
+import espmFoto from './assets/programa/esportmaniacos.jpg';
+import diasFoto from './assets/programa/0dias.png';
+import allioFoto from './assets/programa/allio.jpg';
+import lt10Foto from './assets/programa/lt10.jpg';
+import elpostpartidoFoto from './assets/programa/elpostpartido.jpeg';
+import reportadosFoto from './assets/programa/reportados.jpg';
+
+//Caster
+import bebecasterFoto from './assets/casters/bebecaster.jpg';
+import noaFoto from './assets/casters/noa.jpg';
+import fernandoFoto from './assets/casters/fernandocardenete.jpg';
+import wolkFoto from './assets/casters/wolk.jpg';
+import champi14Foto from './assets/casters/champi14.jpg';
+
 
 // Roles
 import iconJungle from './assets/roles/jungle.png'; 
 import iconADC from './assets/roles/adc.png'; 
-
-// Definir constantes vacías para roles que no tienen icono aún para evitar errores
-const iconTop = ""; 
-const iconMid = ""; 
-const iconSupp = ""; 
-
+import iconTop from './assets/roles/toplane.png';
+import iconSupp from './assets/roles/support.png';
+import iconStaff from './assets/roles/staff.png';
+import iconPersonalidad from './assets/roles/personalidad.png';
+import iconPrograma from './assets/roles/programa.png';
+import iconCaster from './assets/roles/casteo.png';
 // --- TU CONFIGURACIÓN REAL DE FIREBASE ---
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -78,6 +113,7 @@ const firebaseConfig = {
 
 // Inicializamos Firebase
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app); 
 const auth = getAuth(app);
 const db = getFirestore(app);
 
@@ -91,7 +127,7 @@ const TARGET_DATE = new Date('2026-01-07T18:00:00');
 const FECHA_INICIO = new Date('2025-12-02T10:00:00'); 
 
 // 2. La fecha de apertura será exactamente 7 días (1 semana) después de la fecha de inicio
-const OPENING_DATE = new Date(FECHA_INICIO.getTime() + (0 * 24 * 60 * 60 * 1000));
+const OPENING_DATE = new Date(FECHA_INICIO.getTime() + ( 0 * 24 * 60 * 60 * 1000));
 
 // --- OBJETO DE ESTILOS ---
 const styles = {
@@ -279,11 +315,11 @@ const DATA = {
       description: 'El jugador más destacado en la máxima competición europea.',
       candidates: [
         { id: 'p1', name: 'Supa', team: 'Movistar KOI', role: 'ADC', roleIcon: iconADC, img: <img src={supaFoto} alt="Supa" className="w-full h-full object-cover object-top" /> },
-        { id: 'p2', name: 'Myrwn', team: 'MAD Lions KOI', role: 'Top', roleIcon: iconTop, img: '🦁' },
-        { id: 'p3', name: 'Oscarinin', team: 'Fnatic', role: 'Top', roleIcon: iconTop, img: '🤺' },
+        { id: 'p2', name: 'Myrwn', team: 'Movistar KOI', role: 'Top', roleIcon: iconTop, img: <img src={myrwinFoto} alt="Myrwin" className="w-full h-full object-cover object-top" /> },
+        { id: 'p3', name: 'Oscarinin', team: 'Fnatic', role: 'Top', roleIcon: iconTop, img: <img src={oscarininFoto} alt="Oscarinin" className="w-full h-full object-cover object-top" /> },
         { id: 'p4', name: 'Razork', team: 'Fnatic', role: 'Jungla', roleIcon: iconJungle, img: <img src={razorkFoto} alt="Razork" className="w-full h-full object-cover object-top" /> },
-        { id: 'p5', name: 'Alvaro', team: 'MAD Lions KOI', role: 'Support', roleIcon: iconSupp, img: '🛡️' },
-        { id: 'p6', name: 'Elyoya', team: 'MAD Lions KOI', role: 'Jungla', roleIcon: iconJungle, img: <img src={elyoyaFoto} alt="Elyoya" className="w-full h-full object-cover object-top" /> },
+        { id: 'p5', name: 'Alvaro', team: 'Movistar KOI', role: 'Support', roleIcon: iconSupp, img: <img src={alvaroFoto} alt="Alvaro" className="w-full h-full object-cover object-top" /> },
+        { id: 'p6', name: 'Elyoya', team: 'Movistar KOI', role: 'Jungla', roleIcon: iconJungle, img: <img src={elyoyaFoto} alt="Elyoya" className="w-full h-full object-cover object-top" /> },
       ]
     },
     // 2. Staff Iberico de la LEC
@@ -293,13 +329,12 @@ const DATA = {
       icon: <ClipboardList className="w-6 h-6" />,
       description: 'Los cerebros detrás de las estrategias en la LEC.',
       candidates: [
-        { id: 's1', name: 'Melzhet', team: 'MDK', role: 'Head Coach', roleIcon: <ClipboardList className={styles.card.roleIcon} />, img: '🧠' },
-        { id: 's2', name: 'Gaax', team: 'MDK', role: 'Assistant', roleIcon: <ClipboardList className={styles.card.roleIcon} />, img: '📝' },
-        { id: 's3', name: 'Guilhoto', team: 'GiantX', role: 'Head Coach', roleIcon: <ClipboardList className={styles.card.roleIcon} />, img: '🦅' },
-        { id: 's4', name: 'Machuki', team: 'GiantX', role: 'Assistant', roleIcon: <ClipboardList className={styles.card.roleIcon} />, img: '📊' },
-        { id: 's5', name: 'Rodrigo', team: 'G2 Esports', role: 'Staff', roleIcon: <ClipboardList className={styles.card.roleIcon} />, img: '⚔️' },
-        { id: 's6', name: 'Rhuckz', team: 'Fnatic', role: 'Staff', roleIcon: <ClipboardList className={styles.card.roleIcon} />, img: '🧡' },
-      ]
+        { id: 's1', name: 'Melzhet', team: 'Movistar Koi', role: 'Head Coach', roleIcon: iconStaff, img: <img src={melzhetFoto} alt="Melzhet" className="w-full h-full object-cover object-center" /> },
+        { id: 's2', name: 'Gaax', team: 'Fnatic', role: 'Assistant', roleIcon: iconStaff, img: <img src={gaaxFoto} alt="Gaax" className="w-full h-full object-cover object-top" /> },
+        { id: 's3', name: 'Guilhoto', team: 'GiantX', role: 'Head Coach', roleIcon: iconStaff, img: <img src={guilhotoFoto} alt="Guilhoto" className="w-full h-full object-cover object-top" /> },
+        { id: 's4', name: 'Machuki', team: 'Team Heretics', role: 'Assistant', roleIcon: iconStaff, img: <img src={machukiFoto} alt="Machuki" className="w-full h-full object-cover" style={{ objectPosition: '50% 15%' }} /> },
+        { id: 's5', name: 'Rodrigo', team: 'G2 Esports', role: 'Staff',  roleIcon: iconStaff, img: <img src={rodrigoFoto} alt="Rodrigo" className="w-full h-full object-cover object-left" /> },
+        { id: 's6', name: 'Rhuckz', team: 'Fnatic', role: 'Staff', roleIcon: iconStaff, img: <img src={rhuckzFoto} alt="Rhuckz" className="w-full h-full object-cover" style={{ objectPosition: '50% 15%' }} /> },]
     },
     // 3. Equipo del año
     {
@@ -312,6 +347,7 @@ const DATA = {
         { id: 't2', name: 'Fnatic', team: 'FNC', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🧡' },
         { id: 't3', name: 'GiantX', team: 'GX', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🟥' },
         { id: 't4', name: 'Team Heretics', team: 'TH', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🦁' },
+        { id: 't5', name: 'Follaculos', team: 'FO', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🦁' },
       ]
     },
     // 4. Costreaming of the Year
@@ -321,7 +357,7 @@ const DATA = {
       icon: <Video className="w-6 h-6" />,
       description: 'La mejor retransmisión alternativa de la competición.',
       candidates: [
-        { id: 'cs1', name: 'Movistar KOI', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🟣' },
+        { id: 'cs1', name: 'Knekro', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🟣' },
         { id: 'cs2', name: 'ESPM', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '📺' },
         { id: 'cs3', name: 'GiantX', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🟥' },
         { id: 'cs4', name: 'Team Heretics', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🦁' },
@@ -335,12 +371,12 @@ const DATA = {
       icon: <User className="w-6 h-6" />,
       description: 'La figura más influyente y carismática del año.',
       candidates: [
-        { id: 'per1', name: 'Ibai', team: 'KOI', role: 'Streamer', roleIcon: <User className={styles.card.roleIcon} />, img: '👑' },
-        { id: 'per2', name: 'Toad', team: 'LVP', role: 'Caster', roleIcon: <User className={styles.card.roleIcon} />, img: '🐸' },
-        { id: 'per3', name: 'JordiLMK', team: 'Content', role: 'Creator', roleIcon: <User className={styles.card.roleIcon} />, img: '📹' },
-        { id: 'per4', name: 'Charo Villarejo', team: 'Host', role: 'Talent', roleIcon: <User className={styles.card.roleIcon} />, img: '🎤' },
-        { id: 'per5', name: 'Th3Antonio', team: 'Pro/Stream', role: 'Toplaner', roleIcon: <User className={styles.card.roleIcon} />, img: '💇‍♂️' },
-        { id: 'per6', name: 'Werlyb', team: 'TH', role: 'Creator', roleIcon: <User className={styles.card.roleIcon} />, img: '🐈' },
+        { id: 'per1', name: 'Ibai', team: 'Movistar KOI', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={ibaiFoto} alt="Ibai" className="w-full h-full object-cover object-center"  style={{ objectPosition: '50% 20%' }}/> },
+        { id: 'per2', name: 'Toad', team: 'Lyon Gaming', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={toadFoto} alt="Toad Amarillo" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 50%' }} /> },
+        { id: 'per3', name: 'JordiLMK', team: 'Content', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={jordilmkFoto} alt="JordiLMK" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }} /> },
+        { id: 'per4', name: 'Charo Villarejo', team: 'Content', role: 'Talent', roleIcon: iconPersonalidad, img: <img src={charoFoto} alt="Charo Villarejo" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }} /> },
+        { id: 'per5', name: 'Th3Antonio', team: 'Giantx', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={th3antonioFoto} alt="Th3 Antonio" className="w-full h-full object-cover" style={{ objectPosition: '50% 05%' }} /> },
+        { id: 'per6', name: 'Werlyb', team: 'Team Heretics', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={werlybFoto} alt="Werlyb" className="w-full h-full object-cover" style={{ objectPosition: '50% 25%' }} /> },
       ]
     },
     // 6. Mejor Programa
@@ -350,24 +386,26 @@ const DATA = {
       icon: <Mic2 className="w-6 h-6" />,
       description: 'El contenido más entretenido e informativo.',
       candidates: [
-        { id: 'pr1', name: 'ESPM', team: 'Vodafone', role: 'Show', roleIcon: <Mic2 className={styles.card.roleIcon} />, img: '🎙️' },
-        { id: 'pr2', name: 'AL Lio Podcast', team: 'Podcast', role: 'Show', roleIcon: <Mic2 className={styles.card.roleIcon} />, img: '📻' },
-        { id: 'pr3', name: 'Postpartido Mellado', team: 'Stream', role: 'Show', roleIcon: <Mic2 className={styles.card.roleIcon} />, img: '⚽' },
-        { id: 'pr4', name: 'Tertulia de los 10', team: 'Debate', role: 'Show', roleIcon: <Mic2 className={styles.card.roleIcon} />, img: '🗣️' },
+        { id: 'pr1', name: 'ESPM', team: 'Podcast', role: 'Show', roleIcon: iconPrograma, img: <img src={espmFoto} alt="Esportmaniacos" className="w-full h-full object-cover object-center" /> },
+        { id: 'pr2', name: 'AL Lio Podcast', team: 'Podcast', role: 'Show', roleIcon: iconPrograma, img: <img src={allioFoto} alt="Al Lio" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 40%' }}/>,},
+        { id: 'pr3', name: 'Postpartido Mellado', team: 'Podcast', role: 'Show', roleIcon: iconPrograma, img: <img src={elpostpartidoFoto} alt="PostPartido" className="w-full h-90  object-center" style={{ objectPosition: '50% 50%' }}/>, },
+        { id: 'pr4', name: 'Tertulia de los 10', team: 'Podcast', role: 'Show', roleIcon:iconPrograma , img: <img src={lt10Foto} alt="La Tertulia de los 10" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/>, },
+        { id: 'pr5', name: '0 dias', team: 'Debate', role: 'Podcast', roleIcon:iconPrograma, img: <img src={diasFoto} alt="O dias" className="w-full h-full object-center" /> },
+        { id: 'pr6', name: 'Reportados', team: 'Debate', role: 'Show', roleIcon:iconPrograma , img: <img src={reportadosFoto} alt="Reportados" className="w-full h-full object-cover object-center" /> },
       ]
     },
-    // 7. Talento Streaming
+    // 7. Caster del Año
     {
-      id: 'talento_streaming',
-      title: 'Talento Streaming',
+      id: 'caster_streaming',
+      title: 'Caster del Año',
       icon: <Zap className="w-6 h-6" />,
       description: 'La voz y el rostro de las retransmisiones oficiales.',
       candidates: [
-        { id: 'ts1', name: 'BebeCaster', team: 'LVP', role: 'Caster', roleIcon: <Zap className={styles.card.roleIcon} />, img: '👶' },
-        { id: 'ts2', name: 'Noa', team: 'LVP', role: 'Analyst', roleIcon: <Zap className={styles.card.roleIcon} />, img: '🧠' },
-        { id: 'ts3', name: 'Fernando Cardenete', team: 'LVP', role: 'Caster', roleIcon: <Zap className={styles.card.roleIcon} />, img: '📝' },
-        { id: 'ts4', name: 'Wolk', team: 'LVP', role: 'Caster', roleIcon: <Zap className={styles.card.roleIcon} />, img: '🐺' },
-        { id: 'ts5', name: 'Champi14', team: 'LVP', role: 'Caster', roleIcon: <Zap className={styles.card.roleIcon} />, img: '🍄' },
+        { id: 'ts1', name: 'BebeCaster', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={bebecasterFoto} alt="BebeCaster" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/> },
+        { id: 'ts2', name: 'Noa', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={noaFoto} alt="Noa" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/> },
+        { id: 'ts3', name: 'Fernando Cardenete', team: 'Caster', role: 'Caster', roleIcon: iconCaster, img: <img src={fernandoFoto} alt="Fernando Cardenete" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }}/> },
+        { id: 'ts4', name: 'Wolk', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={wolkFoto} alt="Wolk" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/> },
+        { id: 'ts5', name: 'Champi14', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={champi14Foto} alt="Champi14" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }}/> },
       ]
     },
     // 8. Cuenta Twitter
@@ -416,20 +454,20 @@ const DATA = {
       icon: <MessageCircle className="w-6 h-6" />,
       description: 'El mensaje que rompió internet este año.',
       candidates: [
-        { id: 'msg1', name: 'Twittlonger Cabra', team: 'Cabra', role: 'Tweet', roleIcon: <MessageCircle className="w-4 h-4" />, img: '📜' },
+        { id: 'msg1', name: 'Twittlonger Cabra a IWD', team: 'Cabra', role: 'Tweet', roleIcon: <MessageCircle className="w-4 h-4" />, img: '📜' },
         { id: 'msg2', name: 'Tweet de Ibai', team: 'Ibai', role: 'Tweet', roleIcon: <MessageCircle className="w-4 h-4" />, img: '💬' },
       ]
     },
     // 12. Premios Aparte (Agrupados o última categoría)
     {
-      id: 'premios_extra',
-      title: 'Premios Especiales',
+      id: 'mejor_iniciativa',
+      title: 'Mejor Iniciativa',
       icon: <Trophy className="w-6 h-6" />,
       description: 'Reconocimientos únicos de la comunidad.',
       candidates: [
-        { id: 'pe1', name: 'Pili y Anna', team: 'Discord Mujeres', role: 'Comunidad', roleIcon: <Users className="w-4 h-4" />, img: '👯‍♀️' },
-        { id: 'pe2', name: 'Peor Jugada', team: 'Fail', role: 'Fail', roleIcon: <Frown className="w-4 h-4" />, img: '🤡' },
-        { id: 'pe3', name: 'Premio Limón', team: 'Acidez', role: 'Limón', roleIcon: <Citrus className="w-4 h-4" />, img: '🍋' },
+        { id: 'pe1', name: 'Discord de Mujeres', team: 'Pili y Anna', role: 'Comunidad', roleIcon: <Users className="w-4 h-4" />, img: '👯‍♀️' },
+        { id: 'pe2', name: 'RIFTY Fantasy Lol', team: '@Rifty', role: 'Comunidad', roleIcon: <Frown className="w-4 h-4" />, img: '🤡' },
+        { id: 'pe3', name: 'Movidas Esports', team: '@MovidasEsports', role: 'Comunidad', roleIcon: <Citrus className="w-4 h-4" />, img: '🍋' },
       ]
     }
   ]
@@ -612,9 +650,11 @@ const CandidateCard = ({ candidate, isSelected, onSelect }) => (
             {candidate.name}
           </h3>
           <p className={styles.card.roleTag}>
-            {/* Solo renderiza la imagen si existe una ruta válida */}
-            {candidate.roleIcon && <span className="w-5 h-5">{candidate.roleIcon}</span>}
-            {candidate.role}
+            <img 
+                src={candidate.roleIcon} 
+                alt={candidate.role} 
+                className={styles.card.roleIcon} 
+            />
           </p>
         </div>
         {isSelected && (
@@ -807,7 +847,6 @@ export default function App() {
         ballot: votes,
         submittedAt: new Date().toISOString(),
         userEmail: voterEmail, 
-        status: 'verified',
         appId: appId
       });
       setHasSubmitted(true);
