@@ -127,7 +127,7 @@ const TARGET_DATE = new Date('2026-01-07T18:00:00');
 const FECHA_INICIO = new Date('2025-12-02T10:00:00'); 
 
 // 2. La fecha de apertura será exactamente 7 días (1 semana) después de la fecha de inicio
-const OPENING_DATE = new Date(FECHA_INICIO.getTime() + ( 8 * 24 * 60 * 60 * 1000));
+const OPENING_DATE = new Date(FECHA_INICIO.getTime() + ( 0 * 24 * 60 * 60 * 1000));
 
 // --- OBJETO DE ESTILOS ---
 const styles = {
@@ -334,7 +334,7 @@ const DATA = {
         { id: 's3', name: 'Guilhoto', team: 'GiantX', role: 'Head Coach', roleIcon: iconStaff, img: <img src={guilhotoFoto} alt="Guilhoto" className="w-full h-full object-cover object-top" /> },
         { id: 's4', name: 'Machuki', team: 'Team Heretics', role: 'Assistant', roleIcon: iconStaff, img: <img src={machukiFoto} alt="Machuki" className="w-full h-full object-cover" style={{ objectPosition: '50% 15%' }} /> },
         { id: 's5', name: 'Rodrigo', team: 'G2 Esports', role: 'Staff',  roleIcon: iconStaff, img: <img src={rodrigoFoto} alt="Rodrigo" className="w-full h-full object-cover object-left" /> },
-        { id: 's6', name: 'Rhuckz', team: 'Fnatic', role: 'Staff', roleIcon: iconStaff, img: <img src={rhuckzFoto} alt="Rhuckz" className="w-full h-full object-cover" style={{ objectPosition: '50% 15%' }} /> },]
+        { id: 's6', name: 'Rhuckz', team: 'Giantx', role: 'Staff', roleIcon: iconStaff, img: <img src={rhuckzFoto} alt="Rhuckz" className="w-full h-full object-cover" style={{ objectPosition: '50% 15%' }} /> },]
     },
     // 3. Equipo del año
     {
