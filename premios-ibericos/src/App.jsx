@@ -48,7 +48,58 @@ import {
 //LOGOS
 import logoImg from './assets/logo2.png'; 
 
+// --- IMPORTS DE IMÁGENES ---
 
+// Players
+import elyoyaFoto from './assets/players/elyoya.jpg'; 
+import razorkFoto from './assets/players/razork.png';
+import supaFoto from './assets/players/supa.jpg';
+import alvaroFoto from './assets/players/alvaro.jpg';
+import myrwinFoto from './assets/players/myrwin.jpg';
+import oscarininFoto from './assets/players/oscarinin.jpg';
+
+// Staff
+import melzhetFoto from './assets/staff/melzhet.jpeg';
+import gaaxFoto from './assets/staff/gaax.jpg';
+import guilhotoFoto from './assets/staff/guilhoto.jpg';
+import machukiFoto from './assets/staff/machuki.jpeg';
+import rodrigoFoto from './assets/staff/rodrigo.jpg';
+import rhuckzFoto from './assets/staff/rhuckz.jpeg';
+
+//Personalidad
+import ibaiFoto from './assets/personalidad/ibai.jpeg';
+import toadFoto from './assets/personalidad/toad.png';
+import jordilmkFoto from './assets/personalidad/jordilmk.jpg';
+import charoFoto from './assets/personalidad/charo.png';
+import th3antonioFoto from './assets/personalidad/th3antonio.png';
+import werlybFoto from './assets/personalidad/werlyb.jpeg';
+
+
+//Programa
+import espmFoto from './assets/programa/esportmaniacos.jpg';
+import diasFoto from './assets/programa/0dias.png';
+import allioFoto from './assets/programa/allio.jpg';
+import lt10Foto from './assets/programa/lt10.jpg';
+import elpostpartidoFoto from './assets/programa/elpostpartido.jpeg';
+import reportadosFoto from './assets/programa/reportados.jpg';
+
+//Caster
+import bebecasterFoto from './assets/casters/bebecaster.jpg';
+import noaFoto from './assets/casters/noa.jpg';
+import fernandoFoto from './assets/casters/fernandocardenete.jpg';
+import wolkFoto from './assets/casters/wolk.jpg';
+import champi14Foto from './assets/casters/champi14.jpg';
+
+
+// Roles
+import iconJungle from './assets/roles/jungle.png'; 
+import iconADC from './assets/roles/adc.png'; 
+import iconTop from './assets/roles/toplane.png';
+import iconSupp from './assets/roles/support.png';
+import iconStaff from './assets/roles/staff.png';
+import iconPersonalidad from './assets/roles/personalidad.png';
+import iconPrograma from './assets/roles/programa.png';
+import iconCaster from './assets/roles/casteo.png';
 // --- TU CONFIGURACIÓN REAL DE FIREBASE ---
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -76,7 +127,7 @@ const TARGET_DATE = new Date('2026-01-07T18:00:00');
 const FECHA_INICIO = new Date('2025-12-02T10:00:00'); 
 
 // 2. La fecha de apertura será exactamente 7 días (1 semana) después de la fecha de inicio
-const OPENING_DATE = new Date(FECHA_INICIO.getTime() + ( 8 * 24 * 60 * 60 * 1000));
+const OPENING_DATE = new Date(FECHA_INICIO.getTime() + ( 0 * 24 * 60 * 60 * 1000));
 
 // --- OBJETO DE ESTILOS ---
 const styles = {
@@ -84,7 +135,7 @@ const styles = {
     page: "min-h-screen bg-[#050505] text-gray-100 font-sans selection:bg-yellow-500 selection:text-black relative",
     navbar: "border-b border-gray-800 bg-black/60 backdrop-blur-md sticky top-0 z-50",
     navContainer: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between", 
-    navLogoGroup: "flex items-center gap-3",
+    navLogoGroup: "flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity",
     navUserGroup: "flex items-center gap-4",
     main: "max-w-7xl mx-auto px-0 py-8 pb-32",
     footer: "fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-gray-800 p-4 z-40",
@@ -256,7 +307,169 @@ actionBtn: "flex items-center justify-center gap-2 px-4 py-3 sm:px-8 bg-gradient
 // --- DATA COMPLETA (Todas las categorías) ---
 const DATA = {
   categories: [
-    
+    // 1. Jugador Iberico de la LEC
+    {
+      id: 'jugador_lec',
+      title: 'Jugador Ibérico LEC',
+      icon: <Trophy className="w-6 h-6" />,
+      description: 'El jugador más destacado en la máxima competición europea.',
+      candidates: [
+        { id: 'p1', name: 'Supa', team: 'Movistar KOI', role: 'ADC', roleIcon: iconADC, img: <img src={supaFoto} alt="Supa" className="w-full h-full object-cover object-top" /> },
+        { id: 'p2', name: 'Myrwn', team: 'Movistar KOI', role: 'Top', roleIcon: iconTop, img: <img src={myrwinFoto} alt="Myrwin" className="w-full h-full object-cover object-top" /> },
+        { id: 'p3', name: 'Oscarinin', team: 'Fnatic', role: 'Top', roleIcon: iconTop, img: <img src={oscarininFoto} alt="Oscarinin" className="w-full h-full object-cover object-top" /> },
+        { id: 'p4', name: 'Razork', team: 'Fnatic', role: 'Jungla', roleIcon: iconJungle, img: <img src={razorkFoto} alt="Razork" className="w-full h-full object-cover object-top" /> },
+        { id: 'p5', name: 'Alvaro', team: 'Movistar KOI', role: 'Support', roleIcon: iconSupp, img: <img src={alvaroFoto} alt="Alvaro" className="w-full h-full object-cover object-top" /> },
+        { id: 'p6', name: 'Elyoya', team: 'Movistar KOI', role: 'Jungla', roleIcon: iconJungle, img: <img src={elyoyaFoto} alt="Elyoya" className="w-full h-full object-cover object-top" /> },
+      ]
+    },
+    // 2. Staff Iberico de la LEC
+    {
+      id: 'staff_lec',
+      title: 'Staff Ibérico LEC',
+      icon: <ClipboardList className="w-6 h-6" />,
+      description: 'Los cerebros detrás de las estrategias en la LEC.',
+      candidates: [
+        { id: 's1', name: 'Melzhet', team: 'Movistar Koi', role: 'Head Coach', roleIcon: iconStaff, img: <img src={melzhetFoto} alt="Melzhet" className="w-full h-full object-cover object-center" /> },
+        { id: 's2', name: 'Gaax', team: 'Fnatic', role: 'Assistant', roleIcon: iconStaff, img: <img src={gaaxFoto} alt="Gaax" className="w-full h-full object-cover object-top" /> },
+        { id: 's3', name: 'Guilhoto', team: 'GiantX', role: 'Head Coach', roleIcon: iconStaff, img: <img src={guilhotoFoto} alt="Guilhoto" className="w-full h-full object-cover object-top" /> },
+        { id: 's4', name: 'Machuki', team: 'Team Heretics', role: 'Assistant', roleIcon: iconStaff, img: <img src={machukiFoto} alt="Machuki" className="w-full h-full object-cover" style={{ objectPosition: '50% 15%' }} /> },
+        { id: 's5', name: 'Rodrigo', team: 'G2 Esports', role: 'Staff',  roleIcon: iconStaff, img: <img src={rodrigoFoto} alt="Rodrigo" className="w-full h-full object-cover object-left" /> },
+        { id: 's6', name: 'Rhuckz', team: 'Giantx', role: 'Staff', roleIcon: iconStaff, img: <img src={rhuckzFoto} alt="Rhuckz" className="w-full h-full object-cover" style={{ objectPosition: '50% 15%' }} /> },]
+    },
+    // 3. Equipo del año
+    {
+      id: 'equipo_ano',
+      title: 'Equipo del Año',
+      icon: <Shield className="w-6 h-6" />,
+      description: 'La organización que ha marcado la diferencia este año.',
+      candidates: [
+        { id: 't1', name: 'Movistar KOI', team: 'KOI', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🟣' },
+        { id: 't2', name: 'Fnatic', team: 'FNC', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🧡' },
+        { id: 't3', name: 'GiantX', team: 'GX', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🟥' },
+        { id: 't4', name: 'Team Heretics', team: 'TH', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🦁' },
+        { id: 't5', name: 'Follaculos', team: 'FO', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🦁' },
+      ]
+    },
+    // 4. Costreaming of the Year
+    {
+      id: 'costreaming',
+      title: 'Costreaming del Año',
+      icon: <Video className="w-6 h-6" />,
+      description: 'La mejor retransmisión alternativa de la competición.',
+      candidates: [
+        { id: 'cs1', name: 'Knekro', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🟣' },
+        { id: 'cs2', name: 'ESPM', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '📺' },
+        { id: 'cs3', name: 'GiantX', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🟥' },
+        { id: 'cs4', name: 'Team Heretics', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🦁' },
+        { id: 'cs5', name: 'Fnatic', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🧡' },
+      ]
+    },
+    // 5. Personalidad
+    {
+      id: 'personalidad',
+      title: 'Personalidad Esports',
+      icon: <User className="w-6 h-6" />,
+      description: 'La figura más influyente y carismática del año.',
+      candidates: [
+        { id: 'per1', name: 'Ibai', team: 'Movistar KOI', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={ibaiFoto} alt="Ibai" className="w-full h-full object-cover object-center"  style={{ objectPosition: '50% 20%' }}/> },
+        { id: 'per2', name: 'Toad', team: 'Lyon Gaming', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={toadFoto} alt="Toad Amarillo" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 50%' }} /> },
+        { id: 'per3', name: 'JordiLMK', team: 'Content', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={jordilmkFoto} alt="JordiLMK" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }} /> },
+        { id: 'per4', name: 'Charo Villarejo', team: 'Content', role: 'Talent', roleIcon: iconPersonalidad, img: <img src={charoFoto} alt="Charo Villarejo" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }} /> },
+        { id: 'per5', name: 'Th3Antonio', team: 'Giantx', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={th3antonioFoto} alt="Th3 Antonio" className="w-full h-full object-cover" style={{ objectPosition: '50% 05%' }} /> },
+        { id: 'per6', name: 'Werlyb', team: 'Team Heretics', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={werlybFoto} alt="Werlyb" className="w-full h-full object-cover" style={{ objectPosition: '50% 25%' }} /> },
+      ]
+    },
+    // 6. Mejor Programa
+    {
+      id: 'programa',
+      title: 'Mejor Programa',
+      icon: <Mic2 className="w-6 h-6" />,
+      description: 'El contenido más entretenido e informativo.',
+      candidates: [
+        { id: 'pr1', name: 'ESPM', team: 'Podcast', role: 'Show', roleIcon: iconPrograma, img: <img src={espmFoto} alt="Esportmaniacos" className="w-full h-full object-cover object-center" /> },
+        { id: 'pr2', name: 'AL Lio Podcast', team: 'Podcast', role: 'Show', roleIcon: iconPrograma, img: <img src={allioFoto} alt="Al Lio" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 40%' }}/>,},
+        { id: 'pr3', name: 'Postpartido Mellado', team: 'Podcast', role: 'Show', roleIcon: iconPrograma, img: <img src={elpostpartidoFoto} alt="PostPartido" className="w-full h-90  object-center" style={{ objectPosition: '50% 50%' }}/>, },
+        { id: 'pr4', name: 'Tertulia de los 10', team: 'Podcast', role: 'Show', roleIcon:iconPrograma , img: <img src={lt10Foto} alt="La Tertulia de los 10" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/>, },
+        { id: 'pr5', name: '0 dias', team: 'Debate', role: 'Podcast', roleIcon:iconPrograma, img: <img src={diasFoto} alt="O dias" className="w-full h-full object-center" /> },
+        { id: 'pr6', name: 'Reportados', team: 'Debate', role: 'Show', roleIcon:iconPrograma , img: <img src={reportadosFoto} alt="Reportados" className="w-full h-full object-cover object-center" /> },
+      ]
+    },
+    // 7. Caster del Año
+    {
+      id: 'caster_streaming',
+      title: 'Caster del Año',
+      icon: <Zap className="w-6 h-6" />,
+      description: 'La voz y el rostro de las retransmisiones oficiales.',
+      candidates: [
+        { id: 'ts1', name: 'BebeCaster', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={bebecasterFoto} alt="BebeCaster" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/> },
+        { id: 'ts2', name: 'Noa', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={noaFoto} alt="Noa" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/> },
+        { id: 'ts3', name: 'Fernando Cardenete', team: 'Caster', role: 'Caster', roleIcon: iconCaster, img: <img src={fernandoFoto} alt="Fernando Cardenete" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }}/> },
+        { id: 'ts4', name: 'Wolk', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={wolkFoto} alt="Wolk" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/> },
+        { id: 'ts5', name: 'Champi14', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={champi14Foto} alt="Champi14" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }}/> },
+      ]
+    },
+    // 8. Cuenta Twitter
+    {
+      id: 'twitter_cuenta',
+      title: 'Twitter Oficial',
+      icon: <Twitter className="w-6 h-6" />,
+      description: 'La mejor gestión de redes sociales de equipo u organización.',
+      candidates: [
+        { id: 'tw1', name: 'Movistar KOI', team: 'KOI', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🟣' },
+        { id: 'tw2', name: 'GiantX', team: 'GX', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🟥' },
+        { id: 'tw3', name: 'Team Heretics', team: 'TH', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🦁' },
+        { id: 'tw4', name: 'LVP', team: 'LVP', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🏆' },
+        { id: 'tw5', name: 'Sheep Esports ES', team: 'News', role: 'Media', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🐑' },
+      ]
+    },
+    // 9. Twittero
+    {
+      id: 'twittero',
+      title: 'Twittero del Año',
+      icon: <User className="w-6 h-6" />,
+      description: 'El usuario que ha reinado en la comunidad de Twitter España.',
+      candidates: [
+        { id: 'twt1', name: 'Hylisangista', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '🐦' },
+        { id: 'twt2', name: 'Razorkismo', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '🗡️' },
+        { id: 'twt3', name: 'Jakose', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '🎭' },
+        { id: 'twt4', name: 'Erixger', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '📱' },
+      ]
+    },
+    // 10. Fans de equipo
+    {
+      id: 'fans',
+      title: 'Fan del Año',
+      icon: <Users className="w-6 h-6" />,
+      description: 'El seguidor más apasionado y leal.',
+      candidates: [
+        { id: 'f1', name: 'Vicotrew', team: 'Fan', role: 'Superfan', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
+        { id: 'f2', name: 'IndarGuasones', team: 'Fan', role: 'Superfan', roleIcon: <Users className={styles.card.roleIcon} />, img: '🃏' },
+        { id: 'f3', name: 'Dropick', team: 'Fan', role: 'Superfan', roleIcon: <Users className={styles.card.roleIcon} />, img: '💧' },
+      ]
+    },
+    // 11. Tweet del Año
+    {
+      id: 'tweet_year',
+      title: 'Tweet del Año',
+      icon: <MessageCircle className="w-6 h-6" />,
+      description: 'El mensaje que rompió internet este año.',
+      candidates: [
+        { id: 'msg1', name: 'Twittlonger Cabra a IWD', team: 'Cabra', role: 'Tweet', roleIcon: <MessageCircle className="w-4 h-4" />, img: '📜' },
+        { id: 'msg2', name: 'Tweet de Ibai', team: 'Ibai', role: 'Tweet', roleIcon: <MessageCircle className="w-4 h-4" />, img: '💬' },
+      ]
+    },
+    // 12. Premios Aparte (Agrupados o última categoría)
+    {
+      id: 'mejor_iniciativa',
+      title: 'Mejor Iniciativa',
+      icon: <Trophy className="w-6 h-6" />,
+      description: 'Reconocimientos únicos de la comunidad.',
+      candidates: [
+        { id: 'pe1', name: 'Discord de Mujeres', team: 'Pili y Anna', role: 'Comunidad', roleIcon: <Users className="w-4 h-4" />, img: '👯‍♀️' },
+        { id: 'pe2', name: 'RIFTY Fantasy Lol', team: '@Rifty', role: 'Comunidad', roleIcon: <Frown className="w-4 h-4" />, img: '🤡' },
+        { id: 'pe3', name: 'Movidas Esports', team: '@MovidasEsports', role: 'Comunidad', roleIcon: <Citrus className="w-4 h-4" />, img: '🍋' },
+      ]
+    }
   ]
 };
 
@@ -349,7 +562,6 @@ const CountdownTimer = () => {
   );
 };
 
-// --- NUEVO: Pantalla de Espera (Pre-Launch) ---
 const PreLaunchScreen = ({ onOpen }) => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
@@ -508,10 +720,15 @@ export default function App() {
   const [generatedImage, setGeneratedImage] = useState(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showSuccessView, setShowSuccessView] = useState(false); 
-
+  const [forceScrollTop, setForceScrollTop] = useState(true);
   const [emailInput, setEmailInput] = useState('');
   const [voterEmail, setVoterEmail] = useState('');
   const [emailError, setEmailError] = useState('');
+
+  const currentCategoryData = DATA.categories[currentStep];
+  const isReviewStep = currentStep === DATA.categories.length;
+  
+  const isAllVoted = DATA.categories.every(cat => votes[cat.id]);
 
   const titleRef = useRef(null);
   
@@ -530,18 +747,21 @@ export default function App() {
     }
   }, []);
 
+
+  //SCROLL
   useEffect(() => {
-    if (titleRef.current) {
+    // Si es el paso 0 y NO venimos de un clic en el logo (carga inicial), 
+    // o si es cualquier otro paso, hacemos scroll al título.
+    if (currentStep > 0 && titleRef.current) {
       const yOffset = -120;
       const element = titleRef.current;
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    } 
+    // Nota: Quitamos el scroll automático al paso 0 aquí para que no interfiera
+    // con el scroll manual del logo o la carga inicial.
   }, [currentStep]);
 
-  // --- CORRECCIÓN IMPORTANTE: NO MOSTRAR SUCCESS AL CARGAR ---
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -693,6 +913,8 @@ export default function App() {
         }
     };
 
+
+
   const downloadImage = () => {
       if (!generatedImage) return;
       const link = document.createElement('a');
@@ -710,9 +932,61 @@ export default function App() {
         setShowShareModal(false); 
   }
 
-  const handleShareTwitter = () => {
-    openTwitterIntent();
+  const handleSmartShare = async () => {
+    if (typeof html2canvas === 'undefined') return;
+    
+    setGeneratingImage(true);
+    
+    try {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const element = document.getElementById('vote-summary-card-hidden');
+      
+      if (!element) {
+        setGeneratingImage(false);
+        return;
+      }
+
+      // 2. Generar  Canvas
+      const canvas = await html2canvas(element, {
+        backgroundColor: '#0a0a0a',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        width: 1080,
+        height: element.offsetHeight
+      });
+
+      // 3. Convertir a Blob y COPIAR AL PORTAPAPELES
+      canvas.toBlob(async (blob) => {
+        try {
+          const item = new ClipboardItem({ "image/png": blob });
+          await navigator.clipboard.write([item]);
+          
+          setCopied(true);
+          setTimeout(() => setCopied(false), 3000);
+          
+        } catch (err) {
+          console.warn("El navegador bloqueó el copiado automático (común en móviles):", err);
+        }
+
+        const text = "¡Estos son mis votos para los #PremiosIbéricos! 🗳️\n\n(Pega tu imagen aquí 👇)";
+        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+
+        setGeneratedImage(canvas.toDataURL("image/png"));
+        setShowSuccessView(false);
+        
+        setGeneratingImage(false);
+      });
+
+    } catch (error) {
+      console.error("Error en smart share:", error);
+      setGeneratingImage(false);
+    }
   };
+
+
+  
 
   if (loading) {
     return (
@@ -727,17 +1001,22 @@ export default function App() {
     return <PreLaunchScreen onOpen={() => setIsVotingOpen(true)} />;
   }
 
-  // --- APP NORMAL ---
-  const currentCategoryData = DATA.categories[currentStep];
-  const isReviewStep = currentStep === DATA.categories.length;
 
   return (
     <div className={styles.layout.page} style={backgroundStyle}>
       {/* NAVBAR */}
       <nav className={styles.layout.navbar}>
         <div className={styles.layout.navContainer}>
-          <div className={styles.layout.navLogoGroup}>
+         <div 
+          className={styles.layout.navLogoGroup} 
+          onClick={() => {
+            setCurrentStep(0);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          style={{ cursor: 'pointer' }} 
+        >
             <img src={logoImg} alt="Logo" className={styles.components.logoImage} /> 
+
             <span className={styles.text.logo}>Premios <span className={styles.text.logoAccent}>Ibéricos</span></span>
           </div>
           <div className={styles.layout.navUserGroup}>
@@ -863,6 +1142,7 @@ export default function App() {
       </main>
 
       {/* FOOTER */}
+      {/* FOOTER */}
       <div className={styles.layout.footer}>
         <div className={styles.layout.footerContainer}>
           <button 
@@ -883,20 +1163,33 @@ export default function App() {
              <div className={`${styles.components.dotBase} ${isReviewStep ? styles.components.dotReview : styles.components.dotPending}`} />
           </div>
 
+          {/* LÓGICA DEL BOTÓN DERECHO CAMBIADA */}
           {!isReviewStep ? (
-            <button 
-              onClick={nextCategory}
-              className={`${styles.components.navBtnBase} ${styles.components.navBtnNext}`}
-            >
-              <span className="hidden sm:inline">Siguiente</span> <ChevronRight size={20} />
-            </button>
+             isAllVoted ? (
+                // CASO: Ya está todo votado -> Botón para ir directo al final
+                <button 
+                  onClick={() => setCurrentStep(DATA.categories.length)}
+                  className={`${styles.components.navBtnBase} ${styles.components.navBtnNext} bg-yellow-500 hover:bg-yellow-400 text-black border-none`}
+                >
+                  <span className="hidden sm:inline">Ver Resumen</span> <CheckCircle2 size={20} />
+                </button>
+             ) : (
+                // CASO: Faltan cosas -> Botón Siguiente normal
+                <button 
+                  onClick={nextCategory}
+                  className={`${styles.components.navBtnBase} ${styles.components.navBtnNext}`}
+                >
+                  <span className="hidden sm:inline">Siguiente</span> <ChevronRight size={20} />
+                </button>
+             )
           ) : (
+            // ESTAMOS EN EL RESUMEN
             <button 
               onClick={submitVotes}
               disabled={isSubmitting}
               className={styles.components.actionBtn}
             >
-              {isSubmitting ? 'Enviando...' : ''} <CheckCircle2 size={20} />
+              {isSubmitting ? 'Enviando...' : 'Confirmar Votos'} <CheckCircle2 size={20} />
             </button>
           )}
         </div>
@@ -983,21 +1276,21 @@ export default function App() {
             </div>
 
             <div className={styles.success.buttonsGrid}>
-                <button 
-                    onClick={handleGenerateImage} 
-                    disabled={generatingImage}
-                    className={styles.components.shareBtn}
-                >
-                <Share2 size={18} /> {generatingImage ? 'Generando...' : 'Compartir Imagen'}
-                </button>
-                <button 
-                onClick={handleCopyClipboard} 
-                className={`${styles.components.copyBtnBase} ${copied ? styles.components.copyBtnSuccess : styles.components.copyBtnDefault}`}
-                >
-                {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
-                {copied ? '¡Copiado!' : 'Copiar'}
-                </button>
-            </div>
+              <button 
+                  onClick={handleSmartShare}  
+                  disabled={generatingImage}
+                  className={styles.components.shareBtn}
+              >
+                <Twitter size={18} /> {generatingImage ? 'Procesando...' : 'Compartir en Twitter'}
+              </button>
+              <button 
+                  onClick={handleCopyClipboard} 
+                  className={`${styles.components.copyBtnBase} ${copied ? styles.components.copyBtnSuccess : styles.components.copyBtnDefault}`}
+              >
+                  {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
+                  {copied ? 'Copiar Texto' : 'Copiar Texto'}
+              </button>
+          </div>
 
             <button onClick={handleLogout} className={styles.components.logoutBtn}>
                 <LogOut size={16} /> Cerrar Sesión
