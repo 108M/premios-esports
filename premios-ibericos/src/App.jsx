@@ -127,7 +127,7 @@ const TARGET_DATE = new Date('2026-01-07T18:00:00');
 const FECHA_INICIO = new Date('2025-12-02T10:00:00'); 
 
 // 2. La fecha de apertura será exactamente 7 días (1 semana) después de la fecha de inicio
-const OPENING_DATE = new Date(FECHA_INICIO.getTime() + ( 0 * 24 * 60 * 60 * 1000));
+const OPENING_DATE = new Date(FECHA_INICIO.getTime() + ( 8 * 24 * 60 * 60 * 1000));
 
 // --- OBJETO DE ESTILOS ---
 const styles = {
