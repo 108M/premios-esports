@@ -123,6 +123,13 @@ import fnaticcostreamFoto from './assets/costream/jordiLMK.jpg';
 import mfreakFoto from './assets/costream/mfreak.png';
 import jetadirectaFoto from './assets/costream/jetadirecta.jpg';
 
+//TW oficial
+import giantxCMFoto from './assets/twoficial/giantx.jpg';
+import koiCMFoto from './assets/twoficial/movistarkoi.jpg';
+import hereticsCMFoto from './assets/twoficial/heretics.jpg';
+import lecFoto from './assets/twoficial/lec.png';
+import sheepFoto from './assets/twoficial/sheep.png';
+import superligaFoto from './assets/twoficial/superliga.png';
 
 
 // Roles
@@ -481,12 +488,12 @@ const DATA = {
       icon: <Twitter className="w-6 h-6" />,
       description: 'La mejor gestión de redes sociales de equipo u organización.',
       candidates: [
-        { id: 'tw1', name: 'Movistar KOI', team: 'KOI', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🟣' },
-        { id: 'tw2', name: 'GiantX', team: 'GX', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🟥' },
-        { id: 'tw3', name: 'Team Heretics', team: 'TH', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🦁' },
-        { id: 'tw4', name: 'LVP', team: 'LVP', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🏆' },
-        { id: 'tw5', name: 'Sheep Esports ES', team: 'Sheep Esports', role: 'Media', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🐑' },
-        { id: 'tw6', name: 'LEC', team: 'KC', role: 'Media', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🐑' },
+        { id: 'tw1', name: 'Movistar KOI', team: 'KOI', role: 'Social', roleIcon: iconCaster, img: <img src={koiCMFoto} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 50%' }}/> },
+        { id: 'tw2', name: 'GiantX', team: 'GX', role: 'Social', roleIcon: iconCaster, img: <img src={giantxCMFoto} alt="Giantx" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 50%' }}/> },
+        { id: 'tw3', name: 'Team Heretics', team: 'TH', role: 'Social', roleIcon: iconCaster, img: <img src={hereticsCMFoto} alt="Team heretics" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 50%' }}/> },
+        { id: 'tw4', name: 'LVP', team: 'LVP', role: 'Social', roleIcon: iconCaster, img: <img src={superligaFoto} alt="LVP" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 50%' }}/> },
+        { id: 'tw5', name: 'Sheep Esports ES', team: 'Sheep Esports', role: 'Media', roleIcon: iconCaster, img: <img src={sheepFoto} alt="Sheep Esports" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 50%' }}/> },
+        { id: 'tw6', name: 'LEC', team: 'KC', role: 'Media',roleIcon: iconCaster, img: <img src={lecFoto} alt="LEC" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 60%' }}/> },
       ]
     },
     // 9. Twittero
