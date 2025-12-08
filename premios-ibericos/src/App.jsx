@@ -57,6 +57,19 @@ import supaFoto from './assets/players/supa.jpg';
 import alvaroFoto from './assets/players/alvaro.jpg';
 import myrwinFoto from './assets/players/myrwin.jpg';
 import oscarininFoto from './assets/players/oscarinin.jpg';
+import flakkedFoto from './assets/players/flakked.png';
+
+
+
+// Revelacion
+import thaygerFoto from './assets/revelacion/thayger.png';
+import cronikFoto from './assets/revelacion/croniik.jpg';
+import hydraFoto from './assets/revelacion/hydra.jpg';
+import legolasFoto from './assets/revelacion/legolas.jpg';
+import timeFoto from './assets/revelacion/time.jpg';
+import rayitoFoto from './assets/revelacion/rayito.jpg';
+
+
 
 // Staff
 import melzhetFoto from './assets/staff/melzhet.jpeg';
@@ -65,9 +78,19 @@ import guilhotoFoto from './assets/staff/guilhoto.jpg';
 import machukiFoto from './assets/staff/machuki.jpeg';
 import rodrigoFoto from './assets/staff/rodrigo.jpg';
 import rhuckzFoto from './assets/staff/rhuckz.jpeg';
+import mauroFoto from './assets/staff/mauro.jpg';
+import ownerFoto from './assets/staff/owner.png';
+
+//equipos
+import fnaticFoto from './assets/equipos/fnatic.png';
+import koiFoto from './assets/equipos/koi.jpg';
+import hereticsFoto from './assets/equipos/heretics.jpeg';
+import giantxFoto from './assets/equipos/giantx.png';
+import follaculosFoto from './assets/equipos/follaculos.png';
+
 
 //Personalidad
-import ibaiFoto from './assets/personalidad/ibai.jpeg';
+import SkainFoto from './assets/personalidad/skain.png';
 import toadFoto from './assets/personalidad/toad.png';
 import jordilmkFoto from './assets/personalidad/jordilmk.jpg';
 import charoFoto from './assets/personalidad/charo.png';
@@ -82,6 +105,7 @@ import allioFoto from './assets/programa/allio.jpg';
 import lt10Foto from './assets/programa/lt10.jpg';
 import elpostpartidoFoto from './assets/programa/elpostpartido.jpeg';
 import reportadosFoto from './assets/programa/reportados.jpg';
+import chinagapFoto from './assets/programa/chinagap.jpg';
 
 //Caster
 import bebecasterFoto from './assets/casters/bebecaster.jpg';
@@ -89,6 +113,16 @@ import noaFoto from './assets/casters/noa.jpg';
 import fernandoFoto from './assets/casters/fernandocardenete.jpg';
 import wolkFoto from './assets/casters/wolk.jpg';
 import champi14Foto from './assets/casters/champi14.jpg';
+import adreFoto from './assets/casters/adre.jpg';
+
+//Costream
+import koicostreamFoto from './assets/costream/koicoestream.jpeg';
+import giantxcostreamFoto from './assets/costream/giantxcostream.jpeg';
+import hereticscostreamFoto from './assets/costream/hereticscostream.jpeg';
+import fnaticcostreamFoto from './assets/costream/jordiLMK.jpg';
+import mfreakFoto from './assets/costream/mfreak.png';
+import jetadirectaFoto from './assets/costream/jetadirecta.jpg';
+
 
 
 // Roles
@@ -96,11 +130,14 @@ import iconJungle from './assets/roles/jungle.png';
 import iconADC from './assets/roles/adc.png'; 
 import iconTop from './assets/roles/toplane.png';
 import iconSupp from './assets/roles/support.png';
+import iconMid from './assets/roles/mid.png';
 import iconStaff from './assets/roles/staff.png';
 import iconPersonalidad from './assets/roles/personalidad.png';
 import iconPrograma from './assets/roles/programa.png';
 import iconCaster from './assets/roles/casteo.png';
-// --- TU CONFIGURACIÓN REAL DE FIREBASE ---
+import iconTwicht from './assets/roles/twitch.png';
+
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
   authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -120,11 +157,11 @@ const db = getFirestore(app);
 const appId = "premios-ibericos-web"; 
 
 
-const TARGET_DATE = new Date('2026-01-07T18:00:00');
+const TARGET_DATE = new Date('2025-12-18T00:00:00');
 
 
 
-const FECHA_INICIO = new Date('2025-12-02T10:00:00'); 
+const FECHA_INICIO = new Date('2025-12-02T12:00:00'); 
 
 // 2. La fecha de apertura será exactamente 7 días (1 semana) después de la fecha de inicio
 const OPENING_DATE = new Date(FECHA_INICIO.getTime() + ( 0 * 24 * 60 * 60 * 1000));
@@ -181,12 +218,12 @@ const styles = {
     navBtnDisabled: "text-gray-600 cursor-not-allowed",
     navBtnActive: "text-white hover:bg-gray-800",
     navBtnNext: "bg-white text-black hover:bg-gray-200 shadow-lg shadow-white/10",
-actionBtn: "flex items-center justify-center gap-2 px-4 py-3 sm:px-8 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black rounded-xl font-bold hover:brightness-110 transition-all shadow-[0_0_20px_rgba(234,179,8,0.4)] disabled:opacity-50 disabled:cursor-not-allowed text-base w-full sm:w-auto",    shareBtn: "flex items-center justify-center gap-2 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition-colors w-full sm:w-auto",
+    actionBtn: "flex items-center justify-center gap-2 px-4 py-3 sm:px-8 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black rounded-xl font-bold hover:brightness-110 transition-all shadow-[0_0_20px_rgba(234,179,8,0.4)] disabled:opacity-50 disabled:cursor-not-allowed text-base w-full sm:w-auto",    shareBtn: "flex items-center justify-center gap-2 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition-colors w-full sm:w-auto",
     copyBtnBase: "flex items-center justify-center gap-2 py-3 font-bold rounded-xl transition-all border w-full sm:w-auto",
     copyBtnSuccess: "bg-green-500 border-green-500 text-white",
     copyBtnDefault: "bg-transparent border-gray-600 hover:bg-gray-800 text-gray-300",
     logoutBtn: "w-full py-3 text-gray-500 hover:text-white rounded-lg transition-colors flex items-center justify-center gap-2 text-sm",
-    dotBase: "w-2 h-2 rounded-full transition-all duration-300",
+    dotBase: "w-2 h-2 rounded-full transition-all duration-300 cursor-pointer hover:scale-125",
     dotActive: "bg-yellow-500 w-6",
     dotReview: "bg-green-500 w-6",
     dotInactive: "bg-yellow-800",
@@ -320,8 +357,28 @@ const DATA = {
         { id: 'p4', name: 'Razork', team: 'Fnatic', role: 'Jungla', roleIcon: iconJungle, img: <img src={razorkFoto} alt="Razork" className="w-full h-full object-cover object-top" /> },
         { id: 'p5', name: 'Alvaro', team: 'Movistar KOI', role: 'Support', roleIcon: iconSupp, img: <img src={alvaroFoto} alt="Alvaro" className="w-full h-full object-cover object-top" /> },
         { id: 'p6', name: 'Elyoya', team: 'Movistar KOI', role: 'Jungla', roleIcon: iconJungle, img: <img src={elyoyaFoto} alt="Elyoya" className="w-full h-full object-cover object-top" /> },
+        { id: 'p7', name: 'Flakked', team: 'Team Heretics', role: 'ADC', roleIcon: iconADC, img: <img src={flakkedFoto} alt="Flakked" className="w-full h-full object-cover object-top" /> },
+        
       ]
     },
+
+    // 1. Jugador REVELACION
+    {
+      id: 'jugador_revelacion',
+      title: 'Jugador Revelacion 2025',
+      icon: <Trophy className="w-6 h-6" />,
+      description: 'El jugador que mas a sorprendido esta temporada.',
+      candidates: [
+        { id: 'p1', name: 'Thayger', team: 'Navi', role: 'Jungla', roleIcon: iconJungle, img: <img src={thaygerFoto} alt="Thayger" className="w-full h-full object-cover object-top" /> },
+        { id: 'p2', name: 'Legolas', team: 'Barça', role: 'ADC', roleIcon: iconADC, img: <img src={legolasFoto} alt="Legolas" className="w-full h-full object-cover object-top" /> },
+        { id: 'p3', name: 'CRoNiiK', team: 'Izidream', role: 'Jungla', roleIcon: iconJungle, img: <img src={cronikFoto} alt="CRoNiiK" className="w-full h-full object-cover object-top" /> },
+        { id: 'p4', name: 'Hydra', team: 'LUA Gaming', role: 'Mid', roleIcon: iconMid, img: <img src={hydraFoto} alt="Hydra" className="w-full h-full object-cover "style={{ objectPosition: '10% 15%' }} />  },
+        { id: 'p5', name: 'Time', team: 'Veni Vidi Vici', role: 'Jungla', roleIcon: iconJungle, img: <img src={timeFoto} alt="Time" className="w-full h-full object-cover object-top" /> },
+        { id: 'p6', name: 'Rayito', team: 'Veni Vidi Vici', role: 'ADC', roleIcon: iconADC, img: <img src={rayitoFoto} alt="Rayito" className="w-full h-full object-cover object-top" style={{ objectPosition: '10% 25%' }}/> },
+        
+      ]
+    },
+
     // 2. Staff Iberico de la LEC
     {
       id: 'staff_lec',
@@ -334,8 +391,11 @@ const DATA = {
         { id: 's3', name: 'Guilhoto', team: 'GiantX', role: 'Head Coach', roleIcon: iconStaff, img: <img src={guilhotoFoto} alt="Guilhoto" className="w-full h-full object-cover object-top" /> },
         { id: 's4', name: 'Machuki', team: 'Team Heretics', role: 'Assistant', roleIcon: iconStaff, img: <img src={machukiFoto} alt="Machuki" className="w-full h-full object-cover" style={{ objectPosition: '50% 15%' }} /> },
         { id: 's5', name: 'Rodrigo', team: 'G2 Esports', role: 'Staff',  roleIcon: iconStaff, img: <img src={rodrigoFoto} alt="Rodrigo" className="w-full h-full object-cover object-left" /> },
-        { id: 's6', name: 'Rhuckz', team: 'Giantx', role: 'Staff', roleIcon: iconStaff, img: <img src={rhuckzFoto} alt="Rhuckz" className="w-full h-full object-cover" style={{ objectPosition: '50% 15%' }} /> },]
-    },
+        { id: 's6', name: 'Rhuckz', team: 'Giantx', role: 'Staff', roleIcon: iconStaff, img: <img src={rhuckzFoto} alt="Rhuckz" className="w-full h-full object-cover" style={{ objectPosition: '50% 15%' }} /> },
+        { id: 's7', name: 'Mauro Garih', team: 'SK Gaming', role:'Assistant', roleIcon: iconStaff, img: <img src={mauroFoto} alt="Mauro Garih" className="w-full h-full object-cover" style={{ objectPosition: '50% 15%' }} /> },
+        { id: 's8', name: 'Owner', team: 'SK Gaming', role: 'Head Coach', roleIcon: iconStaff, img: <img src={ownerFoto} alt="Owner" className="w-full h-full object-cover" style={{ objectPosition: '100% 10%' }} /> },]
+
+      },
     // 3. Equipo del año
     {
       id: 'equipo_ano',
@@ -343,11 +403,11 @@ const DATA = {
       icon: <Shield className="w-6 h-6" />,
       description: 'La organización que ha marcado la diferencia este año.',
       candidates: [
-        { id: 't1', name: 'Movistar KOI', team: 'KOI', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🟣' },
-        { id: 't2', name: 'Fnatic', team: 'FNC', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🧡' },
-        { id: 't3', name: 'GiantX', team: 'GX', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🟥' },
-        { id: 't4', name: 'Team Heretics', team: 'TH', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🦁' },
-        { id: 't5', name: 'Follaculos', team: 'FO', role: 'Org', roleIcon: <Shield className={styles.card.roleIcon} />, img: '🦁' },
+        { id: 't1', name: 'Movistar KOI', team: 'MKOI', role: 'Org', roleIcon: iconStaff, img: <img src={koiFoto} alt="Movistar KOI" className="w-full h-full object-cover object-center" /> },
+        { id: 't2', name: 'Fnatic', team: 'FNC', role: 'Org', roleIcon: iconStaff, img: <img src={fnaticFoto} alt="Fnatic" className="w-full h-full object-cover object-center" /> },
+        { id: 't3', name: 'GiantX', team: 'GX', role: 'Org', roleIcon: iconStaff, img: <img src={giantxFoto} alt="GiantX" className="w-full h-full object-cover object-center" /> },
+        { id: 't4', name: 'Team Heretics', team: 'TH', role: 'Org', roleIcon: iconStaff, img: <img src={hereticsFoto} alt="Team Heretics" className="w-full h-full object-cover object-center" /> },
+        { id: 't5', name: 'Follaculos', team: 'FO', role: 'Org', roleIcon: iconStaff, img: <img src={follaculosFoto} alt="Follaculos" className="w-full h-full object-cover object-center" /> },
       ]
     },
     // 4. Costreaming of the Year
@@ -357,11 +417,13 @@ const DATA = {
       icon: <Video className="w-6 h-6" />,
       description: 'La mejor retransmisión alternativa de la competición.',
       candidates: [
-        { id: 'cs1', name: 'Knekro', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🟣' },
-        { id: 'cs2', name: 'ESPM', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '📺' },
-        { id: 'cs3', name: 'GiantX', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🟥' },
-        { id: 'cs4', name: 'Team Heretics', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🦁' },
-        { id: 'cs5', name: 'Fnatic', team: 'Stream', role: 'Costream', roleIcon: <Video className={styles.card.roleIcon} />, img: '🧡' },
+        { id: 'cs1', name: 'Movistar Koi', team: 'Stream Knekro', role: 'Costream', roleIcon: iconTwicht, img: <img src={koicostreamFoto} alt="Stream MKOI" className="w-full h-full object-cover object-center" /> },
+        { id: 'cs3', name: 'GiantX', team: 'Stream Th3Antonio', role: 'Costream', roleIcon: iconTwicht, img: <img src={giantxcostreamFoto} alt="Stream GiantX" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }} /> },
+        { id: 'cs4', name: 'Team Heretics', team: 'Stream Werlyb / TheGrefg', role: 'Costream', roleIcon: iconTwicht, img: <img src={hereticscostreamFoto} alt="Stream Heretics" className="w-full h-full object-cover object-center" /> },
+        { id: 'cs5', name: 'FNATIC', team: 'Stream JordiLMK', role: 'Costream', roleIcon: iconTwicht, img: <img src={jordilmkFoto} alt="Stream FNATIC" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }} /> },
+        { id: 'cs6', name: 'DplusKIA', team: 'Stream Mfreak', role: 'Costream', roleIcon: iconTwicht, img: <img src={mfreakFoto} alt="Stream DPLUS" className="w-full h-full object-cover object-center" /> },
+        { id: 'cs7', name: 'LYON Gaming', team: 'Stream Jetadirecta', role: 'Costream', roleIcon: iconTwicht, img: <img src={jetadirectaFoto} alt="JordiLMK" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 50%' }} /> },
+        
       ]
     },
     // 5. Personalidad
@@ -371,10 +433,10 @@ const DATA = {
       icon: <User className="w-6 h-6" />,
       description: 'La figura más influyente y carismática del año.',
       candidates: [
-        { id: 'per1', name: 'Ibai', team: 'Movistar KOI', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={ibaiFoto} alt="Ibai" className="w-full h-full object-cover object-center"  style={{ objectPosition: '50% 20%' }}/> },
+        { id: 'per1', name: 'Skain', team: 'Free', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={SkainFoto} alt="Skain" className="w-full h-full object-cover object-center"  style={{ objectPosition: '50% 20%' }}/> },
         { id: 'per2', name: 'Toad', team: 'Lyon Gaming', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={toadFoto} alt="Toad Amarillo" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 50%' }} /> },
         { id: 'per3', name: 'JordiLMK', team: 'Content', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={jordilmkFoto} alt="JordiLMK" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }} /> },
-        { id: 'per4', name: 'Charo Villarejo', team: 'Content', role: 'Talent', roleIcon: iconPersonalidad, img: <img src={charoFoto} alt="Charo Villarejo" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }} /> },
+        { id: 'per4', name: 'Charo Villarejo', team: 'Content', role: 'Madre', roleIcon: iconPersonalidad, img: <img src={charoFoto} alt="Charo Villarejo" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }} /> },
         { id: 'per5', name: 'Th3Antonio', team: 'Giantx', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={th3antonioFoto} alt="Th3 Antonio" className="w-full h-full object-cover" style={{ objectPosition: '50% 05%' }} /> },
         { id: 'per6', name: 'Werlyb', team: 'Team Heretics', role: 'Creator', roleIcon: iconPersonalidad, img: <img src={werlybFoto} alt="Werlyb" className="w-full h-full object-cover" style={{ objectPosition: '50% 25%' }} /> },
       ]
@@ -392,6 +454,8 @@ const DATA = {
         { id: 'pr4', name: 'Tertulia de los 10', team: 'Podcast', role: 'Show', roleIcon:iconPrograma , img: <img src={lt10Foto} alt="La Tertulia de los 10" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/>, },
         { id: 'pr5', name: '0 dias', team: 'Debate', role: 'Podcast', roleIcon:iconPrograma, img: <img src={diasFoto} alt="O dias" className="w-full h-full object-center" /> },
         { id: 'pr6', name: 'Reportados', team: 'Debate', role: 'Show', roleIcon:iconPrograma , img: <img src={reportadosFoto} alt="Reportados" className="w-full h-full object-cover object-center" /> },
+        { id: 'pr7', name: 'Chinagap', team: 'Debate', role: 'Show', roleIcon:iconPrograma , img: <img src={chinagapFoto} alt="Chinagap" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/> },
+        
       ]
     },
     // 7. Caster del Año
@@ -403,9 +467,11 @@ const DATA = {
       candidates: [
         { id: 'ts1', name: 'BebeCaster', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={bebecasterFoto} alt="BebeCaster" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/> },
         { id: 'ts2', name: 'Noa', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={noaFoto} alt="Noa" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/> },
-        { id: 'ts3', name: 'Fernando Cardenete', team: 'Caster', role: 'Caster', roleIcon: iconCaster, img: <img src={fernandoFoto} alt="Fernando Cardenete" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }}/> },
+        { id: 'ts3', name: 'Fernando Cardenete', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={fernandoFoto} alt="Fernando Cardenete" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }}/> },
         { id: 'ts4', name: 'Wolk', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={wolkFoto} alt="Wolk" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/> },
         { id: 'ts5', name: 'Champi14', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={champi14Foto} alt="Champi14" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }}/> },
+        { id: 'ts6', name: 'Adreplays', team: 'Free', role: 'Caster', roleIcon: iconCaster, img: <img src={adreFoto} alt="Adreplays" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }}/> },
+      
       ]
     },
     // 8. Cuenta Twitter
@@ -419,7 +485,8 @@ const DATA = {
         { id: 'tw2', name: 'GiantX', team: 'GX', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🟥' },
         { id: 'tw3', name: 'Team Heretics', team: 'TH', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🦁' },
         { id: 'tw4', name: 'LVP', team: 'LVP', role: 'Social', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🏆' },
-        { id: 'tw5', name: 'Sheep Esports ES', team: 'News', role: 'Media', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🐑' },
+        { id: 'tw5', name: 'Sheep Esports ES', team: 'Sheep Esports', role: 'Media', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🐑' },
+        { id: 'tw6', name: 'LEC', team: 'KC', role: 'Media', roleIcon: <Twitter className={styles.card.roleIcon} />, img: '🐑' },
       ]
     },
     // 9. Twittero
@@ -435,7 +502,25 @@ const DATA = {
         { id: 'twt4', name: 'Erixger', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '📱' },
       ]
     },
+    
+
+    {
+      id: 'asociacion',
+      title: 'Asociacion de Fans del Año',
+      icon: <Users className="w-6 h-6" />,
+      description: 'La mejor agrupacion que lo da todo por sus equipos.',
+      candidates: [
+        { id: 'af1', name: 'El Barco', team: 'Team Heretics', role: 'Asociacion', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
+        { id: 'af2', name: 'La Marea', team: 'GiantX', role: 'Asociacion', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
+        { id: 'af3', name: 'Fanaticos', team: 'Fnatic', role: 'Asociacion', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
+        { id: 'af4', name: 'Las Karpas', team: 'Movistar Koi', role: 'Asociacion', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
+        { id: 'af5', name: 'KOI Noboris', team: 'Movistar Koi', role: 'Asociacion', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
+        { id: 'af6', name: 'El Templo', team: 'Movistar Koi', role: 'Asociacion', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
+      ]
+    },
+    
     // 10. Fans de equipo
+    
     {
       id: 'fans',
       title: 'Fan del Año',
@@ -468,6 +553,7 @@ const DATA = {
         { id: 'pe1', name: 'Discord de Mujeres', team: 'Pili y Anna', role: 'Comunidad', roleIcon: <Users className="w-4 h-4" />, img: '👯‍♀️' },
         { id: 'pe2', name: 'RIFTY Fantasy Lol', team: '@Rifty', role: 'Comunidad', roleIcon: <Frown className="w-4 h-4" />, img: '🤡' },
         { id: 'pe3', name: 'Movidas Esports', team: '@MovidasEsports', role: 'Comunidad', roleIcon: <Citrus className="w-4 h-4" />, img: '🍋' },
+        { id: 'pe4', name: 'Recaudacion de Fondos LEC Expo', team: '@KOINOBORIS', role: 'Asociacion de fans', roleIcon: <Citrus className="w-4 h-4" />, img: '🍋' },
       ]
     }
   ]
@@ -1157,11 +1243,14 @@ export default function App() {
             {DATA.categories.map((_, idx) => (
               <div 
                 key={idx}
+                onClick={() => setCurrentStep(idx)} 
                 className={`${styles.components.dotBase} ${idx === currentStep ? styles.components.dotActive : idx < currentStep ? styles.components.dotInactive : styles.components.dotPending}`}
               />
             ))}
              <div className={`${styles.components.dotBase} ${isReviewStep ? styles.components.dotReview : styles.components.dotPending}`} />
           </div>
+
+
 
           {/* LÓGICA DEL BOTÓN DERECHO CAMBIADA */}
           {!isReviewStep ? (
