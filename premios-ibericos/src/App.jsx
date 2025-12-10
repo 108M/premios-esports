@@ -13,7 +13,6 @@ import {
   getDoc
 } from 'firebase/firestore';
 import { getAnalytics } from "firebase/analytics";
-// ¡IMPORTANTE! Asegúrate de haber instalado esto: npm install html2canvas
 import html2canvas from 'html2canvas';
 
 import { 
@@ -45,7 +44,7 @@ import {
   Frown,
   Citrus
 } from 'lucide-react';
-//LOGOS
+
 import logoImg from './assets/logo2.png'; 
 
 // --- IMPORTS DE IMÁGENES ---
@@ -144,7 +143,40 @@ import iconPrograma from './assets/roles/programa.png';
 import iconCaster from './assets/roles/casteo.png';
 import iconTwicht from './assets/roles/twitch.png';
 
+// asociaciones
+import elbarcoFoto from './assets/asociacion/elbarco.jpg';
+import fanaticosFoto from './assets/asociacion/fanaticos.jpg';
+import g2hispanoFoto from './assets/asociacion/g2hispano.jpeg';
+import koinoborisFoto from './assets/asociacion/koinoboris.png';
+import mareaFoto from './assets/asociacion/marea.jpeg';
+import purpleboostFoto from './assets/asociacion/purpleboost.jpeg';
 
+//fans
+import dropickFoto from './assets/fans/dropick.jpg';
+import gsnsbarcelonaFoto from './assets/fans/gsnsbarcelona.jpg';
+import xtittanFoto from './assets/fans/titan.jpg';
+import hassskyFoto from './assets/fans/hassky.jpg';
+import kharasuFoto from './assets/fans/kharasu.jpg';
+
+//iniciativa
+import fnaticasdc from './assets/iniciativa/fnaticas.png';
+import rifty from './assets/iniciativa/rifty.jpg';
+import movidas from './assets/iniciativa/movidas.png';
+import recaudar from './assets/iniciativa/recaudarfondos.png';
+//movida 
+import ireneFoto from './assets/movida/irene.png';
+import koifuera from './assets/movida/koifueravct.png';
+import koimermelada from './assets/movida/koimermelada.jpeg';
+import maurocardonetti from './assets/movida/maurocardonetti.png';  
+import tweetcabra from './assets/movida/tweetcabra.png';
+
+
+//twittero
+import haskkytw from './assets/twittero/hasskky.png';
+import jakose from './assets/twittero/jakose.png';
+import razorkismo from './assets/twittero/razorkismo.png';
+import shirotw from './assets/twittero/shiro.png';
+import sonri from './assets/twittero/sonri.png';
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
   authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -155,7 +187,6 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_MEASUREMENT_ID
 };
 
-// Inicializamos Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app); 
 const auth = getAuth(app);
@@ -183,8 +214,7 @@ const styles = {
     navUserGroup: "flex items-center gap-4",
     main: "max-w-7xl mx-auto px-0 py-8 pb-32",
     footer: "fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-gray-800 p-4 z-40",
-    footerContainer: "max-w-7xl mx-auto flex flex-row items-center justify-between gap-4",
-    footerDots: "flex gap-2",
+    footerContainer: "max-w-7xl mx-auto flex flex-row items-center justify-between gap-2",
     progressBarContainer: "mb-12 max-w-3xl mx-auto px-4",
     progressBarHeader: "flex justify-between text-xs uppercase tracking-widest text-gray-500 mb-2",
     progressBarTrack: "h-4 w-full bg-gray-900/80 rounded-full overflow-hidden shadow-inner border border-gray-700", 
@@ -201,6 +231,7 @@ const styles = {
     reviewItemPlaceholder: "text-red-500 text-sm flex items-center gap-1",
     reviewEditBtn: "text-xs text-gray-500 hover:text-white underline decoration-gray-700 hover:decoration-white underline-offset-4",
     reviewVoteBtn: "text-xs px-3 py-1 bg-red-500/10 text-red-500 rounded-full hover:bg-red-500 hover:text-white transition-colors",
+    footerDots: "flex flex-row gap-2 justify-center",
   },
   text: {
     logo: "font-bold text-xl tracking-tighter uppercase",
@@ -220,12 +251,13 @@ const styles = {
     userOnlineDot: "w-2 h-2 bg-green-500 rounded-full animate-pulse",
     userEmail: "text-sm font-medium text-gray-300 hidden sm:block",
     logoutIconBtn: "text-gray-400 hover:text-white",
-    loginBtn: "text-lg font-bold text-yellow-500 hover:text-yellow-400 flex items-center gap-3 px-5 py-2.5 bg-yellow-500/10 hover:bg-yellow-500/20 rounded-xl border border-yellow-500/30 transition-all shadow-[0_0_15px_rgba(234,179,8,0.1)]",
-    navBtnBase: "flex items-center justify-center gap-2 px-4 py-3 sm:px-6 rounded-xl font-bold transition-all text-sm sm:text-base flex-1 sm:flex-none",
+    loginBtn: "text-lg font-bold text-yellow-500 hover:text-yellow-400 flex items-center gap-3 px-5 py-2.5 bg-yellow-500/10 hover:bg-yellow-500/20 rounded-xl border  border-yellow-500/30 transition-all shadow-[0_0_15px_rgba(234,179,8,0.1)]",
+    navBtnBase: "flex items-center justify-center gap-2 px-3 py-2 sm:px-6 rounded-xl font-bold transition-all text-sm sm:text-base",
     navBtnDisabled: "text-gray-600 cursor-not-allowed",
     navBtnActive: "text-white hover:bg-gray-800",
     navBtnNext: "bg-white text-black hover:bg-gray-200 shadow-lg shadow-white/10",
-    actionBtn: "flex items-center justify-center gap-2 px-4 py-3 sm:px-8 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black rounded-xl font-bold hover:brightness-110 transition-all shadow-[0_0_20px_rgba(234,179,8,0.4)] disabled:opacity-50 disabled:cursor-not-allowed text-base w-full sm:w-auto",    shareBtn: "flex items-center justify-center gap-2 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition-colors w-full sm:w-auto",
+    actionBtn: "flex items-center justify-center gap-2 p-3 sm:px-8 sm:py-3 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black rounded-xl font-bold hover:brightness-110 transition-all shadow-[0_0_20px_rgba(234,179,8,0.4)] disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base",
+    shareBtn: "flex items-center justify-center gap-2 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition-colors w-full sm:w-auto",
     copyBtnBase: "flex items-center justify-center gap-2 py-3 font-bold rounded-xl transition-all border w-full sm:w-auto",
     copyBtnSuccess: "bg-green-500 border-green-500 text-white",
     copyBtnDefault: "bg-transparent border-gray-600 hover:bg-gray-800 text-gray-300",
@@ -318,10 +350,8 @@ const styles = {
     title: "text-4xl font-bold mb-4 font-sans uppercase tracking-tighter",
     desc: "text-gray-300 mb-8 text-lg",
     highlight: "text-yellow-500 font-bold",
-    // MODIFICADO: Grid de 3 columnas para que quede compacto y centrado
     listContainer: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8",
     listHeader: "text-sm uppercase tracking-widest text-gray-500 border-b border-gray-700 pb-2 mb-4",
-    // MODIFICADO: Elementos centrados con flex-col
     listItem: "flex flex-col items-center justify-center text-center p-4 rounded-xl border border-gray-800 bg-black/40 h-full",
     itemLabel: "text-gray-500 text-[10px] uppercase tracking-wider mb-1 text-center w-full",
     itemValue: "text-yellow-500 font-bold text-lg text-center w-full break-words",
@@ -374,7 +404,7 @@ const DATA = {
       id: 'jugador_revelacion',
       title: 'Jugador Revelacion 2025',
       icon: <Trophy className="w-6 h-6" />,
-      description: 'El jugador que mas a sorprendido esta temporada.',
+      description: 'El jugador que mas ha sorprendido esta temporada.',
       candidates: [
         { id: 'p1', name: 'Thayger', team: 'Navi', role: 'Jungla', roleIcon: iconJungle, img: <img src={thaygerFoto} alt="Thayger" className="w-full h-full object-cover object-top" /> },
         { id: 'p2', name: 'Legolas', team: 'Barça', role: 'ADC', roleIcon: iconADC, img: <img src={legolasFoto} alt="Legolas" className="w-full h-full object-cover object-top" /> },
@@ -503,10 +533,10 @@ const DATA = {
       icon: <User className="w-6 h-6" />,
       description: 'El usuario que ha reinado en la comunidad de Twitter España.',
       candidates: [
-        { id: 'twt1', name: 'Hylisangista', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '🐦' },
-        { id: 'twt2', name: 'Razorkismo', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '🗡️' },
-        { id: 'twt3', name: 'Jakose', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '🎭' },
-        { id: 'twt4', name: 'Erixger', team: 'Twitter', role: 'User', roleIcon: <User className={styles.card.roleIcon} />, img: '📱' },
+        { id: 'twt1', name: 'Shiro', team: '@Shirolamperouge', role: 'User', roleIcon: iconCaster, img: <img src={shirotw} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'twt2', name: 'Razorkismo', team: '@razorkismo_', role: 'User', roleIcon: iconCaster, img: <img src={razorkismo} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'twt3', name: 'Jakose', team: '@Jakose', role: 'User', roleIcon: iconCaster, img: <img src={jakose} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'twt4', name: 'Sonridi', team: '@sonridesigual', role: 'User', roleIcon: iconCaster, img: <img src={sonri} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
       ]
     },
     
@@ -517,12 +547,12 @@ const DATA = {
       icon: <Users className="w-6 h-6" />,
       description: 'La mejor agrupacion que lo da todo por sus equipos.',
       candidates: [
-        { id: 'af1', name: 'El Barco', team: 'Team Heretics', role: 'Asociacion', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
-        { id: 'af2', name: 'La Marea', team: 'GiantX', role: 'Asociacion', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
-        { id: 'af3', name: 'Fanaticos', team: 'Fnatic', role: 'Asociacion', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
-        { id: 'af4', name: 'Las Karpas', team: 'Movistar Koi', role: 'Asociacion', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
-        { id: 'af5', name: 'KOI Noboris', team: 'Movistar Koi', role: 'Asociacion', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
-        { id: 'af6', name: 'El Templo', team: 'Movistar Koi', role: 'Asociacion', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
+        { id: 'af1', name: 'El Barco', team: 'Team Heretics', role: 'Asociacion', roleIcon: iconCaster, img: <img src={elbarcoFoto} alt="Team Heretics" className="w-full h-full object-cover object-center" /> },
+        { id: 'af2', name: 'La Marea', team: 'GiantX', role: 'Asociacion', roleIcon: iconCaster, img: <img src={mareaFoto} alt="Giantx" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 60%' }}/> },
+        { id: 'af3', name: 'FanaticosESP', team: 'Fnatic', role: 'Asociacion', roleIcon: iconCaster, img: <img src={fanaticosFoto} alt="Fnatic" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 60%' }}/> },
+        { id: 'af4', name: 'G2 Hispano', team: 'G2 esports', role: 'Asociacion', roleIcon: iconCaster, img: <img src={g2hispanoFoto} alt="G2 esports" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'af5', name: 'KOI Noboris', team: 'Movistar Koi', role: 'Asociacion', roleIcon: iconCaster, img: <img src={koinoborisFoto} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 50%' }}/> },
+        { id: 'af6', name: 'Purple Boost', team: 'Movistar Koi', role: 'Asociacion', roleIcon: iconCaster, img: <img src={purpleboostFoto} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
       ]
     },
     
@@ -534,20 +564,26 @@ const DATA = {
       icon: <Users className="w-6 h-6" />,
       description: 'El seguidor más apasionado y leal.',
       candidates: [
-        { id: 'f1', name: 'Vicotrew', team: 'Fan', role: 'Superfan', roleIcon: <Users className={styles.card.roleIcon} />, img: '🔥' },
-        { id: 'f2', name: 'IndarGuasones', team: 'Fan', role: 'Superfan', roleIcon: <Users className={styles.card.roleIcon} />, img: '🃏' },
-        { id: 'f3', name: 'Dropick', team: 'Fan', role: 'Superfan', roleIcon: <Users className={styles.card.roleIcon} />, img: '💧' },
+        { id: 'f1', name: 'XTittan', team: 'Fan Team Heretics', role: 'Superfan', roleIcon: iconCaster, img: <img src={xtittanFoto} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 40%' }}/> },
+        { id: 'f2', name: 'GSNS Barcelona', team: 'Fan Guasones', role: 'Superfan', roleIcon: iconCaster, img: <img src={gsnsbarcelonaFoto} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'f3', name: 'Dropick', team: 'Fan Rogue/Navi', role: 'Superfan', roleIcon: iconCaster, img: <img src={dropickFoto} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'f4', name: 'Hasssky', team: 'Fan', role: 'Superfan', roleIcon: iconCaster, img: <img src={haskkytw} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'f5', name: 'Kharasu', team: 'Fan KC', role: 'Superfan', roleIcon: iconCaster, img: <img src={kharasuFoto} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+
       ]
     },
-    // 11. Tweet del Año
+    // 11. movida del Año
     {
-      id: 'tweet_year',
-      title: 'Tweet del Año',
+      id: 'movida_year',
+      title: 'Movida del Año',
       icon: <MessageCircle className="w-6 h-6" />,
-      description: 'El mensaje que rompió internet este año.',
+      description: 'La movida que rompio internet este año.',
       candidates: [
-        { id: 'msg1', name: 'Twittlonger Cabra a IWD', team: 'Cabra', role: 'Tweet', roleIcon: <MessageCircle className="w-4 h-4" />, img: '📜' },
-        { id: 'msg2', name: 'Tweet de Ibai', team: 'Ibai', role: 'Tweet', roleIcon: <MessageCircle className="w-4 h-4" />, img: '💬' },
+        { id: 'msg1', name: 'Twittlonger Cabra a IWD', team: 'Cabra', role: 'Tweet', roleIcon: iconCaster, img: <img src={tweetcabra} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'msg2', name: 'Cardonetti vs Mauro Garih', team: 'Cardonetti / Mauro', role: 'Tweet', roleIcon: iconCaster, img: <img src={maurocardonetti} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'msg3', name: 'Poses Cute T1', team: 'Irenerawr', role: 'Tweet', roleIcon: iconCaster, img: <img src={ireneFoto} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'msg4', name: 'Koi fuera de VCT', team: 'Movistar Koi', role: 'Tweet', roleIcon: iconCaster, img: <img src={koifuera} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'msg5', name: 'Tarros Mermelada', team: 'Movistar Koi', role: 'Tweet', roleIcon: iconCaster, img: <img src={koimermelada} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
       ]
     },
     // 12. Premios Aparte (Agrupados o última categoría)
@@ -557,10 +593,10 @@ const DATA = {
       icon: <Trophy className="w-6 h-6" />,
       description: 'Reconocimientos únicos de la comunidad.',
       candidates: [
-        { id: 'pe1', name: 'Discord de Mujeres', team: 'Pili y Anna', role: 'Comunidad', roleIcon: <Users className="w-4 h-4" />, img: '👯‍♀️' },
-        { id: 'pe2', name: 'RIFTY Fantasy Lol', team: '@Rifty', role: 'Comunidad', roleIcon: <Frown className="w-4 h-4" />, img: '🤡' },
-        { id: 'pe3', name: 'Movidas Esports', team: '@MovidasEsports', role: 'Comunidad', roleIcon: <Citrus className="w-4 h-4" />, img: '🍋' },
-        { id: 'pe4', name: 'Recaudacion de Fondos LEC Expo', team: '@KOINOBORIS', role: 'Asociacion de fans', roleIcon: <Citrus className="w-4 h-4" />, img: '🍋' },
+        { id: 'pe1', name: 'Discord de fnaticAs', team: 'Pili y Anna', role: 'Comunidad', roleIcon: iconCaster, img: <img src={fnaticasdc} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'pe2', name: 'RIFTY Fantasy Lol', team: '@Rifty', role: 'Comunidad', roleIcon: iconCaster, img: <img src={rifty} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 50%' }}/> },
+        { id: 'pe3', name: 'Movidas Esports', team: '@MovidasEsports', role: 'Comunidad', roleIcon: iconCaster, img: <img src={movidas} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
+        { id: 'pe4', name: 'Recaudacion de Fondos LEC Expo', team: '@KOINOBORIS', role: 'Asociacion de fans', roleIcon: iconCaster, img: <img src={recaudar} alt="Movistar Koi" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 10%' }}/> },
       ]
     }
   ]
@@ -595,9 +631,9 @@ const IntroductionCard = () => (
 
       <div className={styles.intro.dateBox}>
         <div className={styles.text.dateAlign}>
-          <span className={styles.text.dateMonth}>Enero</span>
-          <span className={styles.text.dateDay}>7</span>
-          <span className={styles.text.dateHour}>18:00 CET</span>
+          <span className={styles.text.dateMonth}>Diciembre</span>
+          <span className={styles.text.dateDay}>18</span>
+          <span className={styles.text.dateHour}>00:00 CET</span>
         </div>
       </div>
     </div>
@@ -851,8 +887,7 @@ export default function App() {
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     } 
-    // Nota: Quitamos el scroll automático al paso 0 aquí para que no interfiera
-    // con el scroll manual del logo o la carga inicial.
+
   }, [currentStep]);
 
   useEffect(() => {
@@ -867,7 +902,6 @@ export default function App() {
             if (data.ballot) {
               setVotes(data.ballot);
               setHasSubmitted(true);
-              // setShowSuccessView(true); // <--- ELIMINADO PARA QUE NO SALTE AL RECARGAR
               if (data.userEmail) {
                 setVoterEmail(data.userEmail);
               }
@@ -991,7 +1025,7 @@ export default function App() {
                 logging: true,
                 x: 0,
                 y: 0,
-                width: 1080, // WIDTH AJUSTADO AL NUEVO TAMAÑO DE TARJETA
+                width: 1080, 
                 height: element.offsetHeight
             });
             const image = canvas.toDataURL("image/png");
@@ -1025,7 +1059,8 @@ export default function App() {
         setShowShareModal(false); 
   }
 
-  const handleSmartShare = async () => {
+  // --- FUNCIÓN handleSmartShare CORREGIDA ---
+const handleSmartShare = async () => {
     if (typeof html2canvas === 'undefined') return;
     
     setGeneratingImage(true);
@@ -1039,7 +1074,6 @@ export default function App() {
         return;
       }
 
-      // 2. Generar  Canvas
       const canvas = await html2canvas(element, {
         backgroundColor: '#0a0a0a',
         scale: 2,
@@ -1049,25 +1083,52 @@ export default function App() {
         height: element.offsetHeight
       });
 
-      // 3. Convertir a Blob y COPIAR AL PORTAPAPELES
+      // 1. Guardamos la imagen en el estado SIEMPRE (para el modal de respaldo)
+      const dataUrl = canvas.toDataURL("image/png");
+      setGeneratedImage(dataUrl);
+
+      // 2. LÓGICA DE COMPARTIR INTELIGENTE
       canvas.toBlob(async (blob) => {
+        let copySuccess = false;
+        
+        // Criterio para Web Share (móviles): Si el dispositivo lo soporta y NO es un PC obvio
+        const isMobileShareSupported = navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], "votos.png", { type: "image/png" })] });
+        
+        // Determinamos si es un PC (usando la heurística común)
+        const isDesktop = !/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
         try {
-          const item = new ClipboardItem({ "image/png": blob });
-          await navigator.clipboard.write([item]);
-          
-          setCopied(true);
-          setTimeout(() => setCopied(false), 3000);
-          
+          if (isMobileShareSupported && !isDesktop) {
+             // --- OPCIÓN A: MÓVIL (Compartir nativo) ---
+             await navigator.share({
+               files: [new File([blob], "votos.png", { type: "image/png" })],
+               title: 'Mis Votos Premios Ibéricos',
+               text: '¡Mis votos para los #PremiosIbéricos! 🗳️'
+             });
+             copySuccess = true;
+          } else {
+             // --- OPCIÓN B: PC (Copiar al Portapapeles) ---
+             const item = new ClipboardItem({ "image/png": blob });
+             await navigator.clipboard.write([item]);
+             copySuccess = true;
+             setCopied(true);
+             setTimeout(() => setCopied(false), 3000);
+             
+             // Abrimos Twitter web, que es lo que quieres en PC
+             const text = "¡Estos son mis votos para los #PremiosIbéricos! 🗳️\n\n(Pega tu imagen aquí 👇)";
+             const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+             window.open(url, '_blank');
+          }
         } catch (err) {
-          console.warn("El navegador bloqueó el copiado automático (común en móviles):", err);
+          console.warn("Copiado/Compartir falló o fue cancelado:", err);
+          copySuccess = false;
         }
 
-        const text = "¡Estos son mis votos para los #PremiosIbéricos! 🗳️\n\n(Pega tu imagen aquí 👇)";
-        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
-
-        setGeneratedImage(canvas.toDataURL("image/png"));
-        setShowSuccessView(false);
+        // 3. Si el proceso de Compartir/Copiar falla, mostramos el modal de respaldo
+        if (!copySuccess) {
+            setShowSuccessView(false);
+            setShowShareModal(true);
+        }
         
         setGeneratingImage(false);
       });
@@ -1176,7 +1237,12 @@ export default function App() {
               <p className={styles.text.subheading}>{currentCategoryData.description}</p>
             </div>
 
-            <div className={styles.layout.grid}>
+            
+            <div className={
+              currentCategoryData.candidates.length > 6
+                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 max-w-7xl mx-auto"
+                : styles.layout.grid
+            }>
               {currentCategoryData.candidates.map((candidate) => (
                 <CandidateCard 
                   key={candidate.id}
@@ -1186,6 +1252,7 @@ export default function App() {
                 />
               ))}
             </div>
+
           </div>
         ) : (
           <div className={styles.layout.reviewContainer}>
@@ -1194,7 +1261,7 @@ export default function App() {
               <p className={styles.text.subheading}>Revisa tus elecciones antes de enviar.</p>
             </div>
 
-            {/* MODIFICADO: GRID DE 2 COLUMNAS */}
+            
             <div className={styles.layout.reviewList}>
               {DATA.categories.map((cat) => {
                 const selected = cat.candidates.find(c => c.id === votes[cat.id]);
@@ -1235,7 +1302,6 @@ export default function App() {
       </main>
 
       {/* FOOTER */}
-      {/* FOOTER */}
       <div className={styles.layout.footer}>
         <div className={styles.layout.footerContainer}>
           <button 
@@ -1259,10 +1325,10 @@ export default function App() {
 
 
 
-          {/* LÓGICA DEL BOTÓN DERECHO CAMBIADA */}
+          
           {!isReviewStep ? (
              isAllVoted ? (
-                // CASO: Ya está todo votado -> Botón para ir directo al final
+                
                 <button 
                   onClick={() => setCurrentStep(DATA.categories.length)}
                   className={`${styles.components.navBtnBase} ${styles.components.navBtnNext} bg-yellow-500 hover:bg-yellow-400 text-black border-none`}
@@ -1270,7 +1336,7 @@ export default function App() {
                   <span className="hidden sm:inline">Ver Resumen</span> <CheckCircle2 size={20} />
                 </button>
              ) : (
-                // CASO: Faltan cosas -> Botón Siguiente normal
+                
                 <button 
                   onClick={nextCategory}
                   className={`${styles.components.navBtnBase} ${styles.components.navBtnNext}`}
@@ -1279,19 +1345,24 @@ export default function App() {
                 </button>
              )
           ) : (
-            // ESTAMOS EN EL RESUMEN
+            
             <button 
               onClick={submitVotes}
               disabled={isSubmitting}
               className={styles.components.actionBtn}
+              title={isSubmitting ? 'Enviando...' : 'Confirmar Votos'} 
             >
-              {isSubmitting ? 'Enviando...' : 'Confirmar Votos'} <CheckCircle2 size={20} />
+              
+              <span className="hidden sm:inline">
+                 {isSubmitting ? 'Enviando...' : 'Confirmar Votos'}
+              </span> 
+              <CheckCircle2 size={20} />
             </button>
           )}
         </div>
       </div>
 
-      {/* LOGIN MODAL */}
+      
       {showLoginModal && (
         <div className={styles.modal.overlay}>
           <div className={styles.modal.container}>
@@ -1322,7 +1393,7 @@ export default function App() {
                 {emailError && <p className="modal-error-text">{emailError}</p>}
               </div>
 
-              {/* CORREGIDO: Usando el objeto de estilos */}
+              
               <button type="submit" className={styles.modal.submitBtn}>
                 Continuar <ChevronRight size={18} />
               </button>
@@ -1335,7 +1406,7 @@ export default function App() {
         </div>
       )}
 
-      {/* OVERLAY DE ÉXITO */}
+      
       {hasSubmitted && showSuccessView && (
         <div className={styles.success.overlay}>
             <div className={styles.success.card}>
@@ -1355,8 +1426,8 @@ export default function App() {
                 Gracias por participar en los <span className={styles.success.highlight}>Premios Ibéricos</span>.
                 Tus elecciones han sido registradas correctamente.
             </p>
-            
-            {/* RESUMEN EN EL MODAL DE ÉXITO TAMBIÉN EN GRID (OPCIONAL) */}
+
+                    
             <div className={`${styles.success.listContainer} grid grid-cols-1 sm:grid-cols-2 gap-3`}>
                 {DATA.categories.map(cat => {
                 const selectedCandidate = cat.candidates.find(c => c.id === votes[cat.id]);
@@ -1395,7 +1466,7 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL SHARE */}
+      
       {showShareModal && generatedImage && (
         <div className={styles.modal.overlay} style={{zIndex: 70}}>
           <div className={`${styles.modal.container} max-w-md`}>
@@ -1430,7 +1501,7 @@ export default function App() {
         </div>
       )}
       
-      {/* CARD OCULTA PARA GENERACIÓN */}
+      
       {hasSubmitted && (
           <VoteSummaryCardHidden votes={votes} data={DATA} />
       )}
