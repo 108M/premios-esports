@@ -11,10 +11,10 @@ import {
   doc, 
   setDoc, 
   getDoc,
-  collection, // <--- FALTABA ESTO
-  query,      // <--- FALTABA ESTO
-  where,      // <--- FALTABA ESTO
-  getDocs     // <--- FALTABA ESTO
+  collection, 
+  query,      
+  where,      
+  getDocs     
 } from 'firebase/firestore';
 import { getAnalytics } from "firebase/analytics";
 import html2canvas from 'html2canvas';
@@ -51,7 +51,7 @@ import {
 
 import logoImg from './assets/logo2.png'; 
 
-// --- IMPORTS DE IMÁGENES ---
+// --- IMPORTS DE IMAGENES ---
 
 // Players
 import elyoyaFoto from './assets/players/elyoya.jpg'; 
@@ -180,10 +180,8 @@ import razorkismo from './assets/twittero/razorkismo.png';
 import shirotw from './assets/twittero/shiro.png';
 import sonri from './assets/twittero/sonri.png';
 
-// ===========================================
-// CONFIGURACIÓN DE FIREBASE Y FECHAS
-// ===========================================
 
+// CONFIGURACIÓN DE FIREBASE Y FECHAS
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
   authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -200,15 +198,14 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const appId = "premios-ibericos-web"; 
-const LOCAL_VOTOS_KEY = 'PREMIOS_VOTOS'; // CLAVE USADA PARA LOCALSTORAGE
-
+const LOCAL_VOTOS_KEY = 'PREMIOS_VOTOS';
 const TARGET_DATE = new Date('2025-12-18T00:00:00');
 const FECHA_INICIO = new Date('2025-12-02T12:00:00'); 
 const OPENING_DATE = new Date(FECHA_INICIO.getTime() + ( 0 * 24 * 60 * 60 * 1000));
 
-// ===========================================
+
 // OBJETO DE ESTILOS
-// ===========================================
+
 
 const styles = {
   layout: {
@@ -383,13 +380,9 @@ const styles = {
   }
 };
 
-
-
-// AÑADE ESTA FUNCIÓN AQUÍ:
 const getInitialVotes = () => {
     try {
         const savedVotes = localStorage.getItem(LOCAL_VOTOS_KEY);
-        // El cambio clave: Si parsed es null, usamos {}
         const parsed = savedVotes ? JSON.parse(savedVotes) : {};
         return parsed || {}; 
     } catch (e) {
@@ -399,9 +392,8 @@ const getInitialVotes = () => {
 };
 
 
-// ===========================================
-// DATA (CANDIDATOS Y CATEGORÍAS)
-// ===========================================
+
+// DATA 
 
 const DATA = {
   categories: [
@@ -625,9 +617,9 @@ const DATA = {
   ]
 };
 
-// ===========================================
+
 // COMPONENTES UI AUXILIARES
-// ===========================================
+
 
 const IntroductionCard = () => (
   <div className={styles.intro.container}>
@@ -860,10 +852,7 @@ const VoteSummaryCardHidden = ({ votes, data }) => {
 };
 
 
-// ===========================================
 // COMPONENTE PRINCIPAL
-// ===========================================
-
 export default function App() {
   const [user, setUser] = useState(null);
   const [votes, setVotes] = useState(getInitialVotes);
@@ -885,7 +874,7 @@ export default function App() {
 
   const currentCategoryData = DATA.categories[currentStep];
   const isReviewStep = currentStep === DATA.categories.length;
-const isAllVoted = votes && DATA.categories.every(cat => votes[cat.id]);
+  const isAllVoted = votes && DATA.categories.every(cat => votes[cat.id]);
   const titleRef = useRef(null);
   
   const backgroundStyle = {
@@ -898,9 +887,7 @@ const isAllVoted = votes && DATA.categories.every(cat => votes[cat.id]);
   };
 
 
-// ... (Tu función App) ...
 
-  // 1. Efecto de control de apertura de votación
   useEffect(() => {
     if (new Date() >= OPENING_DATE) {
       setIsVotingOpen(true);
@@ -908,10 +895,7 @@ const isAllVoted = votes && DATA.categories.every(cat => votes[cat.id]);
   }, []);
 
 
-  // 2. Efecto de MIGRACIÓN Y CARGA LOCAL DE VOTOS
 
-
-  // 3. Efecto de SCROLL
   useEffect(() => {
     if (forceScrollTop) {
        window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -927,7 +911,6 @@ const isAllVoted = votes && DATA.categories.every(cat => votes[cat.id]);
   }, [currentStep, forceScrollTop]);
 
 
-  // 4. Efecto de AUTENTICACIÓN Y CARGA DE FIREBASE
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -937,7 +920,6 @@ const isAllVoted = votes && DATA.categories.every(cat => votes[cat.id]);
           const docSnap = await getDoc(userDocRef);
           
           if (docSnap.exists()) {
-            // Carga de Firestore (Votos definitivos y logueados)
             const data = docSnap.data();
             if (data.ballot) {
               setVotes(data.ballot || {});
@@ -947,10 +929,6 @@ const isAllVoted = votes && DATA.categories.every(cat => votes[cat.id]);
               }
             }
           } 
-          /* // Si el usuario llega con votos en localStorage (por migración), pero no en Firestore, 
-          // ya tiene los votos en el estado gracias al useEffect de migración anterior.
-          // Solo necesitamos asegurarnos de que el formulario de login/email se mantenga.
-          */
 
         } catch (error) {
           console.error("Error cargando votos de Firestore:", error);
@@ -968,13 +946,11 @@ const findVotesByEmail = async (email) => {
         return null;
     }
 
-    // VERIFICACIÓN DE AUTH: ¿Quién está preguntando?
     const currentUser = auth.currentUser;
 
     try {
         const usersCollectionRef = collection(db, 'artifacts', appId, 'users');
         
-        // Creamos la query
         const q = query(usersCollectionRef, where('userEmail', '==', email));
 
         const querySnapshot = await getDocs(q);
@@ -984,11 +960,10 @@ const findVotesByEmail = async (email) => {
             return null; 
         }
 
-        // Si encontramos al usuario
         const userDoc = querySnapshot.docs[0];
         const uid = userDoc.id;
 
-        // Buscamos la papeleta
+
         const votesRef = doc(db, 'artifacts', appId, 'users', uid, 'votes', 'selection');
         const voteSnap = await getDoc(votesRef);
 
@@ -1000,7 +975,6 @@ const findVotesByEmail = async (email) => {
         }
 
     } catch (error) {
-        // AQUÍ ES DONDE ESTABA FALLANDO
        
         
         if (error.code === 'permission-denied') {
@@ -1014,16 +988,14 @@ const handleLogin = async (e) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(emailInput)) {
-        setEmailError('Por favor, introduce un correo válido.');
+        setEmailError('Por favor, introduce un correo valido.');
         return;
     }
     
-    // TRUCO IMPORTANTE: Pasamos a minúsculas y quitamos espacios extra
     const emailLimpio = emailInput.toLowerCase().trim();
 
     setEmailError('');
     try {
-        // 1. Iniciar sesión anónimamente
         const userCredential = await signInAnonymously(auth);
         const uid = userCredential.user.uid;
         const userDocRef = doc(db, 'artifacts', appId, 'users', uid, 'votes', 'selection');
@@ -1031,48 +1003,45 @@ const handleLogin = async (e) => {
         let finalVotes = votes || {};
         let isFinalSubmitted = false;
 
-        // 2. Buscar usando el email LIMPIO
-        // Puse un console.log para que veas en la consola qué está buscando
         console.log("Buscando votos para:", emailLimpio);
         const existingVoteData = await findVotesByEmail(emailLimpio);
         
         if (existingVoteData) {
-            // ¡ENCONTRADO!
             const remoteVotes = existingVoteData.ballot || {};
             
             if (Object.keys(remoteVotes).length > 0) {
                 finalVotes = remoteVotes;
                 isFinalSubmitted = true;
-                // ALERT TEMPORAL: Para confirmar que funciona
+
               
             } else {
                 isFinalSubmitted = false;
                 console.log("Usuario encontrado pero sin votos válidos. Permitiendo revotación.");
             }
 
-            // Guardamos los datos recuperados en el usuario actual
+
             await setDoc(userDocRef, existingVoteData, { merge: true });
             
         } else {
             // NO ENCONTRADO
             console.log("No se encontraron votos previos para este email.");
             
-            // Si no encuentra nada, verificamos si el usuario actual tenía votos pendientes de enviar
+
             if (Object.keys(finalVotes).length > 0) { 
                 await setDoc(userDocRef, {
                     ballot: finalVotes,
                     submittedAt: new Date().toISOString(),
-                    userEmail: emailLimpio, // Guardamos el email limpio
+                    userEmail: emailLimpio, 
                     appId: appId
                 }, { merge: true });
                 isFinalSubmitted = true; 
             } else {
-                // Si no encuentra votos y no tenía nada seleccionado, NO está submitted
+
                 isFinalSubmitted = false;
             }
         }
         
-        // 3. Actualizar React
+
         setVotes(finalVotes);
         setHasSubmitted(isFinalSubmitted);
         setVoterEmail(emailLimpio);
@@ -1096,7 +1065,6 @@ const submitVotes = async () => {
     }
     setIsSubmitting(true);
     try {
-        // 1. Guardar VOTO COMPLETO en la subcolección (como antes)
         await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'votes', 'selection'), {
             ballot: votes,
             submittedAt: new Date().toISOString(),
@@ -1104,7 +1072,6 @@ const submitVotes = async () => {
             appId: appId
         }, { merge: true });
 
-        // 2. NUEVO: Guardar EMAIL en el documento PADRE (para que el buscador lo encuentre)
         await setDoc(doc(db, 'artifacts', appId, 'users', user.uid), {
             userEmail: voterEmail,
             submittedAt: new Date().toISOString(),
@@ -1133,7 +1100,7 @@ const submitVotes = async () => {
     setGeneratedImage(null);
     setShowShareModal(false);
     setGeneratingImage(false);
-    localStorage.removeItem(LOCAL_VOTOS_KEY); // Limpiamos local storage también
+    localStorage.removeItem(LOCAL_VOTOS_KEY); 
   };
 
   const handleVote = (candidateId) => {
@@ -1142,7 +1109,6 @@ const submitVotes = async () => {
     const newVotes = { ...votes, [categoryId]: candidateId };
     setVotes(newVotes);
     
-    // Guardar en LocalStorage después de cada voto (persistencia inmediata)
     localStorage.setItem(LOCAL_VOTOS_KEY, JSON.stringify(newVotes));
   };
 
@@ -1198,7 +1164,6 @@ const submitVotes = async () => {
       const dataUrl = canvas.toDataURL("image/png");
       setGeneratedImage(dataUrl);
 
-      // Lógica de Copiado/Compartido
       canvas.toBlob(async (blob) => {
         let copySuccess = false;
         
@@ -1207,7 +1172,6 @@ const submitVotes = async () => {
 
         try {
           if (isMobileShareSupported && !isDesktop) {
-             // --- OPCIÓN A: MÓVIL (Compartir nativo) ---
              await navigator.share({
                files: [new File([blob], "votos.png", { type: "image/png" })],
                title: 'Mis Votos Premios Ibéricos',
@@ -1215,7 +1179,6 @@ const submitVotes = async () => {
              });
              copySuccess = true;
           } else {
-             // --- OPCIÓN B: PC (Copiar al Portapapeles) ---
              const item = new ClipboardItem({ "image/png": blob });
              await navigator.clipboard.write([item]);
              copySuccess = true;
@@ -1231,7 +1194,6 @@ const submitVotes = async () => {
           copySuccess = false;
         }
 
-        // 3. Si el proceso de Compartir/Copiar falla, mostramos el modal de respaldo
         if (!copySuccess) {
             setShowSuccessView(false);
             setShowShareModal(true);
@@ -1453,7 +1415,7 @@ const submitVotes = async () => {
           
           {!isReviewStep ? (
              isAllVoted ? (
-                // Botón para ir directo al final
+                // Boton para ir directo al final
                 <button 
                   onClick={() => setCurrentStep(DATA.categories.length)}
                   className={`${styles.components.navBtnBase} ${styles.components.navBtnNext} bg-yellow-500 hover:bg-yellow-400 text-black border-none`}
@@ -1461,7 +1423,7 @@ const submitVotes = async () => {
                   <span className="hidden sm:inline">Ver Resumen</span> <CheckCircle2 size={20} />
                 </button>
              ) : (
-                // Botón Siguiente normal
+                // Boton Siguiente normal
                 <button 
                   onClick={nextCategory}
                   className={`${styles.components.navBtnBase} ${styles.components.navBtnNext}`}
