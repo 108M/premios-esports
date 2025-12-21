@@ -10,7 +10,11 @@ import {
   getFirestore, 
   doc, 
   setDoc, 
-  getDoc
+  getDoc,
+  collection, // <--- FALTABA ESTO
+  query,      // <--- FALTABA ESTO
+  where,      // <--- FALTABA ESTO
+  getDocs     // <--- FALTABA ESTO
 } from 'firebase/firestore';
 import { getAnalytics } from "firebase/analytics";
 import html2canvas from 'html2canvas';
@@ -59,7 +63,6 @@ import oscarininFoto from './assets/players/oscarinin.jpg';
 import flakkedFoto from './assets/players/flakked.png';
 
 
-
 // Revelacion
 import thaygerFoto from './assets/revelacion/thayger.png';
 import cronikFoto from './assets/revelacion/croniik.jpg';
@@ -67,7 +70,6 @@ import hydraFoto from './assets/revelacion/hydra.jpg';
 import legolasFoto from './assets/revelacion/legolas.jpg';
 import timeFoto from './assets/revelacion/time.jpg';
 import rayitoFoto from './assets/revelacion/rayito.jpg';
-
 
 
 // Staff
@@ -177,6 +179,11 @@ import jakose from './assets/twittero/jakose.png';
 import razorkismo from './assets/twittero/razorkismo.png';
 import shirotw from './assets/twittero/shiro.png';
 import sonri from './assets/twittero/sonri.png';
+
+// ===========================================
+// CONFIGURACIÓN DE FIREBASE Y FECHAS
+// ===========================================
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
   authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -193,18 +200,16 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const appId = "premios-ibericos-web"; 
-
+const LOCAL_VOTOS_KEY = 'PREMIOS_VOTOS'; // CLAVE USADA PARA LOCALSTORAGE
 
 const TARGET_DATE = new Date('2025-12-18T00:00:00');
-
-
-
 const FECHA_INICIO = new Date('2025-12-02T12:00:00'); 
-
-// 2. La fecha de apertura será exactamente 7 días (1 semana) después de la fecha de inicio
 const OPENING_DATE = new Date(FECHA_INICIO.getTime() + ( 0 * 24 * 60 * 60 * 1000));
 
-// --- OBJETO DE ESTILOS ---
+// ===========================================
+// OBJETO DE ESTILOS
+// ===========================================
+
 const styles = {
   layout: {
     page: "min-h-screen bg-[#050505] text-gray-100 font-sans selection:bg-yellow-500 selection:text-black relative",
@@ -378,7 +383,26 @@ const styles = {
   }
 };
 
-// --- DATA COMPLETA (Todas las categorías) ---
+
+
+// AÑADE ESTA FUNCIÓN AQUÍ:
+const getInitialVotes = () => {
+    try {
+        const savedVotes = localStorage.getItem(LOCAL_VOTOS_KEY);
+        // El cambio clave: Si parsed es null, usamos {}
+        const parsed = savedVotes ? JSON.parse(savedVotes) : {};
+        return parsed || {}; 
+    } catch (e) {
+        console.error("Error al cargar votos iniciales:", e);
+        return {};
+    }
+};
+
+
+// ===========================================
+// DATA (CANDIDATOS Y CATEGORÍAS)
+// ===========================================
+
 const DATA = {
   categories: [
     // 1. Jugador Iberico de la LEC
@@ -395,7 +419,6 @@ const DATA = {
         { id: 'p5', name: 'Alvaro', team: 'Movistar KOI', role: 'Support', roleIcon: iconSupp, img: <img src={alvaroFoto} alt="Alvaro" className="w-full h-full object-cover object-top" /> },
         { id: 'p6', name: 'Elyoya', team: 'Movistar KOI', role: 'Jungla', roleIcon: iconJungle, img: <img src={elyoyaFoto} alt="Elyoya" className="w-full h-full object-cover object-top" /> },
         { id: 'p7', name: 'Flakked', team: 'Team Heretics', role: 'ADC', roleIcon: iconADC, img: <img src={flakkedFoto} alt="Flakked" className="w-full h-full object-cover object-top" /> },
-        
       ]
     },
 
@@ -457,7 +480,7 @@ const DATA = {
         { id: 'cs1', name: 'Movistar Koi', team: 'Stream Knekro', role: 'Costream', roleIcon: iconTwicht, img: <img src={koicostreamFoto} alt="Stream MKOI" className="w-full h-full object-cover object-center" /> },
         { id: 'cs3', name: 'GiantX', team: 'Stream Th3Antonio', role: 'Costream', roleIcon: iconTwicht, img: <img src={giantxcostreamFoto} alt="Stream GiantX" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }} /> },
         { id: 'cs4', name: 'Team Heretics', team: 'Stream Werlyb / TheGrefg', role: 'Costream', roleIcon: iconTwicht, img: <img src={hereticscostreamFoto} alt="Stream Heretics" className="w-full h-full object-cover object-center" /> },
-        { id: 'cs5', name: 'FNATIC', team: 'Stream JordiLMK', role: 'Costream', roleIcon: iconTwicht, img: <img src={jordilmkFoto} alt="Stream FNATIC" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }} /> },
+        { id: 'cs5', name: 'FNATIC', team: 'Stream JordiLMK / Esportmaniacos', role: 'Costream', roleIcon: iconTwicht, img: <img src={jordilmkFoto} alt="Stream FNATIC" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }} /> },
         { id: 'cs6', name: 'DplusKIA', team: 'Stream Mfreak', role: 'Costream', roleIcon: iconTwicht, img: <img src={mfreakFoto} alt="Stream DPLUS" className="w-full h-full object-cover object-center" /> },
         { id: 'cs7', name: 'LYON Gaming', team: 'Stream Jetadirecta', role: 'Costream', roleIcon: iconTwicht, img: <img src={jetadirectaFoto} alt="JordiLMK" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 50%' }} /> },
         
@@ -508,7 +531,7 @@ const DATA = {
         { id: 'ts4', name: 'Wolk', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={wolkFoto} alt="Wolk" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 30%' }}/> },
         { id: 'ts5', name: 'Champi14', team: 'LVP', role: 'Caster', roleIcon: iconCaster, img: <img src={champi14Foto} alt="Champi14" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }}/> },
         { id: 'ts6', name: 'Adreplays', team: 'Free', role: 'Caster', roleIcon: iconCaster, img: <img src={adreFoto} alt="Adreplays" className="w-full h-full object-cover object-center" style={{ objectPosition: '50% 20%' }}/> },
-      
+        
       ]
     },
     // 8. Cuenta Twitter
@@ -602,7 +625,9 @@ const DATA = {
   ]
 };
 
-// --- COMPONENTES UI ---
+// ===========================================
+// COMPONENTES UI AUXILIARES
+// ===========================================
 
 const IntroductionCard = () => (
   <div className={styles.intro.container}>
@@ -834,10 +859,14 @@ const VoteSummaryCardHidden = ({ votes, data }) => {
   );
 };
 
-// --- COMPONENTE PRINCIPAL ---
+
+// ===========================================
+// COMPONENTE PRINCIPAL
+// ===========================================
+
 export default function App() {
   const [user, setUser] = useState(null);
-  const [votes, setVotes] = useState({});
+  const [votes, setVotes] = useState(getInitialVotes);
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -856,9 +885,7 @@ export default function App() {
 
   const currentCategoryData = DATA.categories[currentStep];
   const isReviewStep = currentStep === DATA.categories.length;
-  
-  const isAllVoted = DATA.categories.every(cat => votes[cat.id]);
-
+const isAllVoted = votes && DATA.categories.every(cat => votes[cat.id]);
   const titleRef = useRef(null);
   
   const backgroundStyle = {
@@ -870,6 +897,10 @@ export default function App() {
     backgroundSize: '100% 100%, 32px 32px'
   };
 
+
+// ... (Tu función App) ...
+
+  // 1. Efecto de control de apertura de votación
   useEffect(() => {
     if (new Date() >= OPENING_DATE) {
       setIsVotingOpen(true);
@@ -877,19 +908,26 @@ export default function App() {
   }, []);
 
 
-  //SCROLL
+  // 2. Efecto de MIGRACIÓN Y CARGA LOCAL DE VOTOS
+
+
+  // 3. Efecto de SCROLL
   useEffect(() => {
-    // Si es el paso 0 y NO venimos de un clic en el logo (carga inicial), 
-    // o si es cualquier otro paso, hacemos scroll al título.
-    if (currentStep > 0 && titleRef.current) {
+    if (forceScrollTop) {
+       window.scrollTo({ top: 0, behavior: 'smooth' });
+       setForceScrollTop(false);
+    } else if (currentStep > 0 && titleRef.current) {
       const yOffset = -120;
       const element = titleRef.current;
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
-    } 
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [currentStep, forceScrollTop]);
 
-  }, [currentStep]);
 
+  // 4. Efecto de AUTENTICACIÓN Y CARGA DE FIREBASE
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -897,18 +935,25 @@ export default function App() {
         try {
           const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'votes', 'selection');
           const docSnap = await getDoc(userDocRef);
+          
           if (docSnap.exists()) {
+            // Carga de Firestore (Votos definitivos y logueados)
             const data = docSnap.data();
             if (data.ballot) {
-              setVotes(data.ballot);
+              setVotes(data.ballot || {});
               setHasSubmitted(true);
               if (data.userEmail) {
                 setVoterEmail(data.userEmail);
               }
             }
-          }
+          } 
+          /* // Si el usuario llega con votos en localStorage (por migración), pero no en Firestore, 
+          // ya tiene los votos en el estado gracias al useEffect de migración anterior.
+          // Solo necesitamos asegurarnos de que el formulario de login/email se mantenga.
+          */
+
         } catch (error) {
-          console.error("Error cargando votos:", error);
+          console.error("Error cargando votos de Firestore:", error);
         }
       }
       setLoading(false);
@@ -916,23 +961,166 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  const handleLogin = async (e) => {
+
+const findVotesByEmail = async (email) => {
+
+    if (!email) {
+        return null;
+    }
+
+    // VERIFICACIÓN DE AUTH: ¿Quién está preguntando?
+    const currentUser = auth.currentUser;
+
+    try {
+        const usersCollectionRef = collection(db, 'artifacts', appId, 'users');
+        
+        // Creamos la query
+        const q = query(usersCollectionRef, where('userEmail', '==', email));
+
+        const querySnapshot = await getDocs(q);
+        
+
+        if (querySnapshot.empty) {
+            return null; 
+        }
+
+        // Si encontramos al usuario
+        const userDoc = querySnapshot.docs[0];
+        const uid = userDoc.id;
+
+        // Buscamos la papeleta
+        const votesRef = doc(db, 'artifacts', appId, 'users', uid, 'votes', 'selection');
+        const voteSnap = await getDoc(votesRef);
+
+        if (voteSnap.exists()) {
+            const data = voteSnap.data();
+            return data;
+        } else {
+            return null;
+        }
+
+    } catch (error) {
+        // AQUÍ ES DONDE ESTABA FALLANDO
+       
+        
+        if (error.code === 'permission-denied') {
+            console.warn("[DEBUG] BLOQUEADO POR REGLAS DE FIREBASE. Revisa la consola de Firebase.");
+        }
+        return null;
+    }
+};
+
+const handleLogin = async (e) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(emailInput)) {
-      setEmailError('Por favor, introduce un correo válido.');
-      return;
+        setEmailError('Por favor, introduce un correo válido.');
+        return;
     }
+    
+    // TRUCO IMPORTANTE: Pasamos a minúsculas y quitamos espacios extra
+    const emailLimpio = emailInput.toLowerCase().trim();
+
+    setEmailError('');
     try {
-      setEmailError('');
-      await signInAnonymously(auth); 
-      setVoterEmail(emailInput);
-      setShowLoginModal(false);
+        // 1. Iniciar sesión anónimamente
+        const userCredential = await signInAnonymously(auth);
+        const uid = userCredential.user.uid;
+        const userDocRef = doc(db, 'artifacts', appId, 'users', uid, 'votes', 'selection');
+        
+        let finalVotes = votes || {};
+        let isFinalSubmitted = false;
+
+        // 2. Buscar usando el email LIMPIO
+        // Puse un console.log para que veas en la consola qué está buscando
+        console.log("Buscando votos para:", emailLimpio);
+        const existingVoteData = await findVotesByEmail(emailLimpio);
+        
+        if (existingVoteData) {
+            // ¡ENCONTRADO!
+            const remoteVotes = existingVoteData.ballot || {};
+            
+            if (Object.keys(remoteVotes).length > 0) {
+                finalVotes = remoteVotes;
+                isFinalSubmitted = true;
+                // ALERT TEMPORAL: Para confirmar que funciona
+              
+            } else {
+                isFinalSubmitted = false;
+                console.log("Usuario encontrado pero sin votos válidos. Permitiendo revotación.");
+            }
+
+            // Guardamos los datos recuperados en el usuario actual
+            await setDoc(userDocRef, existingVoteData, { merge: true });
+            
+        } else {
+            // NO ENCONTRADO
+            console.log("No se encontraron votos previos para este email.");
+            
+            // Si no encuentra nada, verificamos si el usuario actual tenía votos pendientes de enviar
+            if (Object.keys(finalVotes).length > 0) { 
+                await setDoc(userDocRef, {
+                    ballot: finalVotes,
+                    submittedAt: new Date().toISOString(),
+                    userEmail: emailLimpio, // Guardamos el email limpio
+                    appId: appId
+                }, { merge: true });
+                isFinalSubmitted = true; 
+            } else {
+                // Si no encuentra votos y no tenía nada seleccionado, NO está submitted
+                isFinalSubmitted = false;
+            }
+        }
+        
+        // 3. Actualizar React
+        setVotes(finalVotes);
+        setHasSubmitted(isFinalSubmitted);
+        setVoterEmail(emailLimpio);
+        setShowLoginModal(false);
+
     } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      setEmailError('Error de conexión. Inténtalo de nuevo.');
+        console.error("Error handleLogin:", error);
+        alert("Error: " + error.message); 
     }
-  };
+};
+
+const submitVotes = async () => {
+    if (!user || !voterEmail) {
+        setShowLoginModal(true);
+        return;
+    }
+    const allVoted = DATA.categories.every(cat => votes[cat.id]);
+    if (!allVoted) {
+        alert("Por favor, vota en todas las categorías antes de enviar.");
+        return;
+    }
+    setIsSubmitting(true);
+    try {
+        // 1. Guardar VOTO COMPLETO en la subcolección (como antes)
+        await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'votes', 'selection'), {
+            ballot: votes,
+            submittedAt: new Date().toISOString(),
+            userEmail: voterEmail,
+            appId: appId
+        }, { merge: true });
+
+        // 2. NUEVO: Guardar EMAIL en el documento PADRE (para que el buscador lo encuentre)
+        await setDoc(doc(db, 'artifacts', appId, 'users', user.uid), {
+            userEmail: voterEmail,
+            submittedAt: new Date().toISOString(),
+            lastLogin: new Date().toISOString()
+        }, { merge: true });
+        
+        setHasSubmitted(true);
+        setShowSuccessView(true); 
+    } catch (error) {
+        console.error("Error guardando votos:", error);
+        alert("Hubo un error al enviar tus votos: " + error.message);
+    } finally {
+        setIsSubmitting(false);
+    }
+};
+
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -945,12 +1133,17 @@ export default function App() {
     setGeneratedImage(null);
     setShowShareModal(false);
     setGeneratingImage(false);
+    localStorage.removeItem(LOCAL_VOTOS_KEY); // Limpiamos local storage también
   };
 
   const handleVote = (candidateId) => {
     if (hasSubmitted) return;
     const categoryId = DATA.categories[currentStep].id;
-    setVotes(prev => ({ ...prev, [categoryId]: candidateId }));
+    const newVotes = { ...votes, [categoryId]: candidateId };
+    setVotes(newVotes);
+    
+    // Guardar en LocalStorage después de cada voto (persistencia inmediata)
+    localStorage.setItem(LOCAL_VOTOS_KEY, JSON.stringify(newVotes));
   };
 
   const nextCategory = () => {
@@ -965,33 +1158,7 @@ export default function App() {
     }
   };
 
-  const submitVotes = async () => {
-    if (!user || !voterEmail) {
-      setShowLoginModal(true);
-      return;
-    }
-    const allVoted = DATA.categories.every(cat => votes[cat.id]);
-    if (!allVoted) {
-      alert("Por favor, vota en todas las categorías antes de enviar.");
-      return;
-    }
-    setIsSubmitting(true);
-    try {
-      await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'votes', 'selection'), {
-        ballot: votes,
-        submittedAt: new Date().toISOString(),
-        userEmail: voterEmail, 
-        appId: appId
-      });
-      setHasSubmitted(true);
-      setShowSuccessView(true); // Aquí sí queremos que salte al terminar de votar
-    } catch (error) {
-      console.error("Error guardando votos:", error);
-      alert("Hubo un error al enviar tus votos. Inténtalo de nuevo.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+
 
   const handleCopyClipboard = async () => {
     const text = "🗳️ Mis votos para los #PremiosIbéricos...";
@@ -1004,63 +1171,8 @@ export default function App() {
     }
   };
 
-  const handleGenerateImage = async () => {
-        if (typeof html2canvas === 'undefined') {
-            alert("Para generar la imagen, necesitas instalar html2canvas en tu proyecto local: npm install html2canvas");
-            return;
-        }
-        setGeneratingImage(true);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 500));
-            const element = document.getElementById('vote-summary-card-hidden');
-            if (!element) {
-                setGeneratingImage(false);
-                return;
-            }
-            const canvas = await html2canvas(element, {
-                backgroundColor: '#0a0a0a', 
-                scale: 2, 
-                useCORS: true, 
-                allowTaint: true, 
-                logging: true,
-                x: 0,
-                y: 0,
-                width: 1080, 
-                height: element.offsetHeight
-            });
-            const image = canvas.toDataURL("image/png");
-            setGeneratedImage(image);
-            setShowSuccessView(false); 
-            setShowShareModal(true); 
-        } catch (error) {
-            console.error("Error generando imagen:", error);
-            alert("Error al generar la imagen: " + error.message);
-        } finally {
-            setGeneratingImage(false);
-        }
-    };
 
-
-
-  const downloadImage = () => {
-      if (!generatedImage) return;
-      const link = document.createElement('a');
-      link.href = generatedImage;
-      link.download = 'MisVotosPremiosIbericos.png';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-  };
-
-  const openTwitterIntent = () => {
-        const text = "¡Estos son mis votos para los #PremiosIbéricos! 🗳️\n\n(Adjunta tu imagen copiada aquí 👇)";
-        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
-        setShowShareModal(false); 
-  }
-
-  // --- FUNCIÓN handleSmartShare CORREGIDA ---
-const handleSmartShare = async () => {
+  const handleSmartShare = async () => {
     if (typeof html2canvas === 'undefined') return;
     
     setGeneratingImage(true);
@@ -1083,18 +1195,14 @@ const handleSmartShare = async () => {
         height: element.offsetHeight
       });
 
-      // 1. Guardamos la imagen en el estado SIEMPRE (para el modal de respaldo)
       const dataUrl = canvas.toDataURL("image/png");
       setGeneratedImage(dataUrl);
 
-      // 2. LÓGICA DE COMPARTIR INTELIGENTE
+      // Lógica de Copiado/Compartido
       canvas.toBlob(async (blob) => {
         let copySuccess = false;
         
-        // Criterio para Web Share (móviles): Si el dispositivo lo soporta y NO es un PC obvio
         const isMobileShareSupported = navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], "votos.png", { type: "image/png" })] });
-        
-        // Determinamos si es un PC (usando la heurística común)
         const isDesktop = !/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
         try {
@@ -1114,7 +1222,6 @@ const handleSmartShare = async () => {
              setCopied(true);
              setTimeout(() => setCopied(false), 3000);
              
-             // Abrimos Twitter web, que es lo que quieres en PC
              const text = "¡Estos son mis votos para los #PremiosIbéricos! 🗳️\n\n(Pega tu imagen aquí 👇)";
              const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
              window.open(url, '_blank');
@@ -1140,7 +1247,23 @@ const handleSmartShare = async () => {
   };
 
 
-  
+  const downloadImage = () => {
+      if (!generatedImage) return;
+      const link = document.createElement('a');
+      link.href = generatedImage;
+      link.download = 'MisVotosPremiosIbericos.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  };
+
+  const openTwitterIntent = () => {
+        const text = "¡Estos son mis votos para los #PremiosIbéricos! 🗳️\n\n(Adjunta tu imagen copiada aquí 👇)";
+        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+        setShowShareModal(false); 
+  };
+
 
   if (loading) {
     return (
@@ -1161,14 +1284,14 @@ const handleSmartShare = async () => {
       {/* NAVBAR */}
       <nav className={styles.layout.navbar}>
         <div className={styles.layout.navContainer}>
-         <div 
+          <div 
           className={styles.layout.navLogoGroup} 
           onClick={() => {
             setCurrentStep(0);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           style={{ cursor: 'pointer' }} 
-        >
+          >
             <img src={logoImg} alt="Logo" className={styles.components.logoImage} /> 
 
             <span className={styles.text.logo}>Premios <span className={styles.text.logoAccent}>Ibéricos</span></span>
@@ -1320,15 +1443,17 @@ const handleSmartShare = async () => {
                 className={`${styles.components.dotBase} ${idx === currentStep ? styles.components.dotActive : idx < currentStep ? styles.components.dotInactive : styles.components.dotPending}`}
               />
             ))}
-             <div className={`${styles.components.dotBase} ${isReviewStep ? styles.components.dotReview : styles.components.dotPending}`} />
+             <div 
+                onClick={() => setCurrentStep(DATA.categories.length)}
+                className={`${styles.components.dotBase} ${isReviewStep ? styles.components.dotReview : styles.components.dotPending}`} 
+             />
           </div>
-
 
 
           
           {!isReviewStep ? (
              isAllVoted ? (
-                
+                // Botón para ir directo al final
                 <button 
                   onClick={() => setCurrentStep(DATA.categories.length)}
                   className={`${styles.components.navBtnBase} ${styles.components.navBtnNext} bg-yellow-500 hover:bg-yellow-400 text-black border-none`}
@@ -1336,7 +1461,7 @@ const handleSmartShare = async () => {
                   <span className="hidden sm:inline">Ver Resumen</span> <CheckCircle2 size={20} />
                 </button>
              ) : (
-                
+                // Botón Siguiente normal
                 <button 
                   onClick={nextCategory}
                   className={`${styles.components.navBtnBase} ${styles.components.navBtnNext}`}
@@ -1345,7 +1470,7 @@ const handleSmartShare = async () => {
                 </button>
              )
           ) : (
-            
+            // ESTAMOS EN EL RESUMEN
             <button 
               onClick={submitVotes}
               disabled={isSubmitting}
@@ -1354,7 +1479,7 @@ const handleSmartShare = async () => {
             >
               
               <span className="hidden sm:inline">
-                 {isSubmitting ? 'Enviando...' : 'Confirmar Votos'}
+                  {isSubmitting ? 'Enviando...' : 'Confirmar Votos'}
               </span> 
               <CheckCircle2 size={20} />
             </button>
@@ -1427,8 +1552,8 @@ const handleSmartShare = async () => {
                 Tus elecciones han sido registradas correctamente.
             </p>
 
-                    
-            <div className={`${styles.success.listContainer} grid grid-cols-1 sm:grid-cols-2 gap-3`}>
+            
+            <div className={`${styles.success.listContainer} grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3`}>
                 {DATA.categories.map(cat => {
                 const selectedCandidate = cat.candidates.find(c => c.id === votes[cat.id]);
                 return (
@@ -1448,7 +1573,7 @@ const handleSmartShare = async () => {
                   disabled={generatingImage}
                   className={styles.components.shareBtn}
               >
-                <Twitter size={18} /> {generatingImage ? 'Procesando...' : 'Compartir en Twitter'}
+                  <Twitter size={18} /> {generatingImage ? 'Procesando...' : 'Compartir en Twitter'}
               </button>
               <button 
                   onClick={handleCopyClipboard} 
@@ -1457,7 +1582,7 @@ const handleSmartShare = async () => {
                   {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
                   {copied ? 'Copiar Texto' : 'Copiar Texto'}
               </button>
-          </div>
+            </div>
 
             <button onClick={handleLogout} className={styles.components.logoutBtn}>
                 <LogOut size={16} /> Cerrar Sesión
