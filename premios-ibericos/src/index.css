@@ -1,7 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-body {
-  background-color: #050505; /* Fondo negro por defecto */
+@theme {
+  --animate-fade-in: fade-in 1s ease-out;
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* Estilos base para asegurar que el fondo negro cubra todo */
+:root {
+  background-color: #050505;
+  color: white;
 }
